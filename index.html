@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Report v6 | All Cabling Tech</title>
+    <title>Executive Report v7 | All Cabling Tech</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -34,6 +34,7 @@
 
         .report-info h1 { font-size: 1.2rem; margin: 0; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         .report-info span { font-size: 0.9rem; color: #64748b; }
+        .current-date { font-size: 1.1rem; color: var(--accent); font-weight: bold; margin-top: 5px; }
 
         /* GRID LAYOUT */
         .main-grid { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 20px; }
@@ -58,6 +59,7 @@
         .form-control:focus { border-color: var(--accent); outline: none; }
         .row-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .row-inputs-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .row-cost-inputs { display: flex; gap: 10px; } /* Custom flex for cost row */
 
         /* BUTTONS */
         .btn { border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
@@ -91,6 +93,7 @@
         .card-title { font-weight: bold; font-size: 0.95rem; color: white; }
         .card-sub { font-size: 0.8rem; color: var(--text-muted); }
         .card-val { font-family: monospace; font-weight: bold; color: var(--success); text-align: right; margin-right: 15px; }
+        .day-badge { background: #334155; color: var(--text-muted); padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-right: 5px; border: 1px solid #475569; }
 
         /* FINANCIAL DASHBOARD */
         .kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
@@ -167,7 +170,8 @@
 <div class="container">
     <header class="header">
         <div class="report-info">
-            <h1>Executive Report v6 | All Cabling Tech</h1>
+            <h1>Executive Report v7 | All Cabling Tech</h1>
+            <div id="dateDisplay" class="current-date"></div>
             <span><i class="fas fa-cloud"></i> Online & Synchronized System</span>
         </div>
         
@@ -255,9 +259,10 @@
                 <div id="costFormBox" class="form-container no-print">
                     <input type="hidden" id="cost_edit_id">
                     <p style="font-size:0.8rem; color:#94a3b8; margin-top:0;">Rent, Insurance, Software, Vehicles...</p>
-                    <div class="row-inputs">
-                        <input type="text" id="cost_desc" class="form-control" placeholder="Description">
-                        <input type="number" id="cost_val" class="form-control" placeholder="Monthly Value $">
+                    <div class="row-cost-inputs">
+                        <input type="number" id="cost_day" class="form-control" placeholder="Day (1-31)" style="flex:1" min="1" max="31">
+                        <input type="text" id="cost_desc" class="form-control" placeholder="Description" style="flex:3">
+                        <input type="number" id="cost_val" class="form-control" placeholder="$" style="flex:2">
                     </div>
                     
                     <div style="display:flex; gap:10px; margin-top: 10px;">
@@ -352,8 +357,13 @@
                     </div>
                 </div>
 
-                <div style="height:220px; margin-top:20px; page-break-inside: avoid;">
+                <div style="height:200px; margin-top:20px; page-break-inside: avoid;">
                     <canvas id="structureChart"></canvas>
+                </div>
+                
+                <div style="height:150px; margin-top:10px; page-break-inside: avoid; border-top: 1px solid #334155; padding-top:10px;">
+                    <p style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin:0;">Weekly Cash Flow (Overhead Due Dates)</p>
+                    <canvas id="cashFlowChart"></canvas>
                 </div>
 
                 <div class="report-only">
@@ -374,6 +384,7 @@
                     <table class="full-table">
                         <thead>
                             <tr>
+                                <th>Due Day</th>
                                 <th>Description</th>
                                 <th style="text-align:right;">Value</th>
                             </tr>
@@ -441,6 +452,7 @@
     let settings = { profit: 100000, gross: 50, comm: 5 }; // Defaults
 
     let mainChart = null;
+    let cashFlowChart = null;
     let modalChart = null;
 
     // --- EXPOSE FUNCTIONS ---
@@ -463,23 +475,28 @@
     window.updateSimulation = updateSimulation;
     window.openModal = openModal;
     window.closeModal = closeModal;
+    
+    // --- DATE LOGIC ---
+    function updateDate() {
+        const d = new Date();
+        const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateStr = d.toLocaleDateString('en-US', opts);
+        document.getElementById('dateDisplay').innerText = dateStr;
+    }
+    window.onload = updateDate;
 
     // --- REALTIME LISTENERS ---
     if(db) {
-        // 1. SETTINGS (Simulador)
+        // 1. SETTINGS
         onSnapshot(doc(db, "act_settings", "global"), (doc) => {
             if (doc.exists()) {
                 settings = doc.data();
-                // Update Inputs
                 document.getElementById('profitSlider').value = settings.profit;
                 document.getElementById('grossSlider').value = settings.gross;
                 document.getElementById('commSlider').value = settings.comm;
-                updateSimulation(); // Update visual only
+                updateSimulation(); 
                 flashSync();
-            } else {
-                // Create defaults if not exists
-                saveSettingsToDB();
-            }
+            } else { saveSettingsToDB(); }
         });
 
         // 2. EMPLOYEES
@@ -506,7 +523,6 @@
         const profit = parseInt(document.getElementById('profitSlider').value);
         const gross = parseInt(document.getElementById('grossSlider').value);
         const comm = parseInt(document.getElementById('commSlider').value);
-
         await setDoc(doc(db, "act_settings", "global"), { profit, gross, comm });
         updateSimulation();
     }
@@ -538,22 +554,16 @@
         const id = document.getElementById('emp_edit_id').value;
         const name = document.getElementById('emp_name').value;
         const net = parseFloat(document.getElementById('emp_net').value);
-        
         if(!name || isNaN(net)) return alert('Please fill in name and net value');
-
         const data = {
-            name,
-            state: document.getElementById('emp_state').value,
+            name, state: document.getElementById('emp_state').value,
             filing: document.getElementById('emp_filing').value,
-            net,
-            deps: parseInt(document.getElementById('emp_deps').value) || 0
+            net, deps: parseInt(document.getElementById('emp_deps').value) || 0
         };
-
         if(id) { await updateDoc(doc(db, "act_employees", id), data); cancelEmpEdit(); } 
         else { await addDoc(collection(db, "act_employees"), data); }
         clearEmpForm();
     }
-
     function editEmp(id) {
         const emp = employees.find(e => e.id === id);
         if(!emp) return;
@@ -563,13 +573,11 @@
         document.getElementById('emp_filing').value = emp.filing;
         document.getElementById('emp_net').value = emp.net;
         document.getElementById('emp_deps').value = emp.deps;
-        
         document.getElementById('empFormBox').classList.add('editing');
         document.getElementById('btnSaveEmp').innerText = "Save";
         document.getElementById('btnSaveEmp').className = "btn btn-warning btn-save";
         document.getElementById('btnCancelEmp').style.display = "block";
     }
-
     function cancelEmpEdit() {
         clearEmpForm();
         document.getElementById('emp_edit_id').value = "";
@@ -578,7 +586,6 @@
         document.getElementById('btnSaveEmp').className = "btn btn-primary btn-save";
         document.getElementById('btnCancelEmp').style.display = "none";
     }
-
     async function removeEmp(id) { if(confirm("Remove employee?")) await deleteDoc(doc(db, "act_employees", id)); }
     function clearEmpForm() { document.getElementById('emp_name').value = ''; document.getElementById('emp_net').value = ''; }
 
@@ -588,22 +595,15 @@
         const name = document.getElementById('cont_name').value;
         const rate = parseFloat(document.getElementById('cont_rate').value);
         const qty = parseFloat(document.getElementById('cont_qty').value);
-        
         if(!name || isNaN(rate) || isNaN(qty)) return alert('Please fill in name, rate and quantity');
-
         const data = {
-            name,
-            rate,
-            type: document.getElementById('cont_type').value,
-            qty,
-            active: document.getElementById('cont_active').checked
+            name, rate, type: document.getElementById('cont_type').value,
+            qty, active: document.getElementById('cont_active').checked
         };
-
         if(id) { await updateDoc(doc(db, "act_contractors", id), data); cancelContEdit(); } 
         else { await addDoc(collection(db, "act_contractors"), data); }
         clearContForm();
     }
-
     function editCont(id) {
         const cont = contractors.find(c => c.id === id);
         if(!cont) return;
@@ -613,13 +613,11 @@
         document.getElementById('cont_type').value = cont.type;
         document.getElementById('cont_qty').value = cont.qty;
         document.getElementById('cont_active').checked = cont.active;
-        
         document.getElementById('contFormBox').classList.add('editing');
         document.getElementById('btnSaveCont').innerText = "Save";
         document.getElementById('btnSaveCont').className = "btn btn-warning btn-save";
         document.getElementById('btnCancelCont').style.display = "block";
     }
-
     function cancelContEdit() {
         clearContForm();
         document.getElementById('cont_edit_id').value = "";
@@ -628,20 +626,20 @@
         document.getElementById('btnSaveCont').className = "btn btn-orange btn-save";
         document.getElementById('btnCancelCont').style.display = "none";
     }
-
     async function removeCont(id) { if(confirm("Remove contractor?")) await deleteDoc(doc(db, "act_contractors", id)); }
     function clearContForm() { document.getElementById('cont_name').value = ''; document.getElementById('cont_rate').value = ''; document.getElementById('cont_qty').value = ''; document.getElementById('cont_active').checked = true; }
 
 
-    // --- CRUD FIXED COSTS ---
+    // --- CRUD FIXED COSTS (WITH DAY) ---
     async function saveFixedCost() {
         const id = document.getElementById('cost_edit_id').value;
         const desc = document.getElementById('cost_desc').value;
         const val = parseFloat(document.getElementById('cost_val').value);
+        const day = parseInt(document.getElementById('cost_day').value) || 1;
         
         if(!desc || isNaN(val)) return alert('Please fill in description and value');
 
-        const data = { desc, val };
+        const data = { desc, val, day };
 
         if(id) { await updateDoc(doc(db, "act_costs", id), data); cancelCostEdit(); } 
         else { await addDoc(collection(db, "act_costs"), data); }
@@ -654,6 +652,7 @@
         document.getElementById('cost_edit_id').value = cost.id;
         document.getElementById('cost_desc').value = cost.desc;
         document.getElementById('cost_val').value = cost.val;
+        document.getElementById('cost_day').value = cost.day || 1;
         
         document.getElementById('costFormBox').classList.add('editing');
         document.getElementById('btnSaveCost').innerText = "Save";
@@ -671,7 +670,7 @@
     }
 
     async function removeCost(id) { if(confirm("Remove cost?")) await deleteDoc(doc(db, "act_costs", id)); }
-    function clearCostForm() { document.getElementById('cost_desc').value = ''; document.getElementById('cost_val').value = ''; }
+    function clearCostForm() { document.getElementById('cost_desc').value = ''; document.getElementById('cost_val').value = ''; document.getElementById('cost_day').value = '';}
 
     // --- RENDER & SIMULATION ---
     function renderAll() {
@@ -689,7 +688,6 @@
         employees.forEach(e => {
             const f = calculatePayroll(e.net, e.state, e.filing, e.deps);
             totalPayroll += f.totalCost;
-
             empList.innerHTML += `
                 <div class="list-card payroll">
                     <div class="card-info" onclick="openModal('${e.id}')">
@@ -701,7 +699,6 @@
                         <button class="btn-icon btn-del-icon" onclick="removeEmp('${e.id}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
-
             reportBody.innerHTML += `
                 <tr><td>${e.name}</td><td>W-2 (${e.state})</td>
                     <td>${formatMoney(f.net)}</td><td>${formatMoney(f.empTax)}</td>
@@ -713,11 +710,9 @@
         contractors.forEach(c => {
             const cost = c.rate * c.qty;
             if(c.active) totalPayroll += cost;
-            
             const typeLabel = c.type === 'day' ? 'days' : 'hrs';
             const statusClass = c.active ? 'contractor' : 'inactive';
             const icon = c.active ? '<i class="fas fa-check-circle" style="color:var(--success)"></i>' : '<i class="fas fa-ban" style="color:gray"></i>';
-
             contList.innerHTML += `
                 <div class="list-card ${statusClass}">
                     <div class="card-info" onclick="editCont('${c.id}')">
@@ -730,41 +725,76 @@
                         <button class="btn-icon btn-del-icon" onclick="removeCont('${c.id}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
-            
             if(c.active) {
-                reportBody.innerHTML += `
-                <tr><td>${c.name}</td><td>1099 Contractor</td>
-                    <td>-</td><td>-</td>
-                    <td>${c.qty} ${typeLabel} x ${formatMoney(c.rate)}</td><td>-</td>
-                    <td><strong>${formatMoney(cost)}</strong></td></tr>`;
+                reportBody.innerHTML += `<tr><td>${c.name}</td><td>1099 Contractor</td><td>-</td><td>-</td><td>${c.qty} ${typeLabel} x ${formatMoney(c.rate)}</td><td>-</td><td><strong>${formatMoney(cost)}</strong></td></tr>`;
             }
         });
-
         document.getElementById('totalPayrollDisplay').innerText = formatMoney(totalPayroll);
 
-        // 3. Costs
+        // 3. Costs & Cash Flow Logic
         const costList = document.getElementById('fixedCostList');
         const reportCosts = document.getElementById('reportCostsBody');
         costList.innerHTML = '';
         reportCosts.innerHTML = '';
         let totalFixed = 0;
+        let weeklyFlow = [0,0,0,0]; // Week 1, 2, 3, 4
+
+        // Sort by day
+        fixedCosts.sort((a,b) => (a.day || 32) - (b.day || 32));
 
         fixedCosts.forEach(c => {
             totalFixed += c.val;
+            const d = c.day || 1; // Default day 1
+            
+            // Bucket logic
+            if(d <= 7) weeklyFlow[0] += c.val;
+            else if(d <= 15) weeklyFlow[1] += c.val;
+            else if(d <= 23) weeklyFlow[2] += c.val;
+            else weeklyFlow[3] += c.val;
+
             costList.innerHTML += `
                 <div class="list-card expense">
-                    <div class="card-info"><div class="card-title">${c.desc}</div></div>
+                    <div class="card-info">
+                        <div class="card-title"><span class="day-badge">Day ${d}</span> ${c.desc}</div>
+                    </div>
                     <div class="card-val">${formatMoney(c.val)}</div>
                     <div>
                         <button class="btn-icon btn-edit-icon" onclick="editCost('${c.id}')"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-icon btn-del-icon" onclick="removeCost('${c.id}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
-            reportCosts.innerHTML += `<tr><td>${c.desc}</td><td style="text-align:right;">${formatMoney(c.val)}</td></tr>`;
+            reportCosts.innerHTML += `<tr><td>Day ${d}</td><td>${c.desc}</td><td style="text-align:right;">${formatMoney(c.val)}</td></tr>`;
         });
         document.getElementById('totalFixedDisplay').innerText = formatMoney(totalFixed);
 
         updateSimulation(totalPayroll, totalFixed);
+        updateCashFlowChart(weeklyFlow);
+    }
+
+    function updateCashFlowChart(dataArr) {
+        const ctx = document.getElementById('cashFlowChart').getContext('2d');
+        if(cashFlowChart) cashFlowChart.destroy();
+        cashFlowChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Week 1 (1-7)', 'Week 2 (8-15)', 'Week 3 (16-23)', 'Week 4 (24-31)'],
+                datasets: [{
+                    label: 'Cash Needed ($)',
+                    data: dataArr,
+                    backgroundColor: '#3b82f6',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
     }
 
     function updateSimulation(payroll = null, fixed = null) {

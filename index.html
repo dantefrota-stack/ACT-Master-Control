@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório Executivo v5 | All Cabling Tech</title>
+    <title>Executive Report v6 | All Cabling Tech</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -167,8 +167,8 @@
 <div class="container">
     <header class="header">
         <div class="report-info">
-            <h1>Relatório Executivo v5 | Overhead Report</h1>
-            <span><i class="fas fa-cloud"></i> Sistema Online & Sincronizado</span>
+            <h1>Executive Report v6 | All Cabling Tech</h1>
+            <span><i class="fas fa-cloud"></i> Online & Synchronized System</span>
         </div>
         
         <div class="logo-container">
@@ -184,12 +184,12 @@
         
         <div class="left-col">
             <div class="panel">
-                <div class="panel-title"><i class="fas fa-users"></i> 1. Gestão de Equipe</div>
+                <div class="panel-title"><i class="fas fa-users"></i> 1. Team Management</div>
                 
-                <div class="section-header">Funcionários (W-2)</div>
+                <div class="section-header">Employees (W-2)</div>
                 <div id="empFormBox" class="form-container no-print">
                     <input type="hidden" id="emp_edit_id">
-                    <input type="text" id="emp_name" class="form-control" placeholder="Nome do Funcionário" style="margin-bottom: 10px;">
+                    <input type="text" id="emp_name" class="form-control" placeholder="Employee Name" style="margin-bottom: 10px;">
                     <div class="row-inputs">
                         <select id="emp_state" class="form-control">
                             <option value="FL">FL (0% State Tax)</option>
@@ -201,41 +201,41 @@
                         </select>
                     </div>
                     <div class="row-inputs" style="margin-top: 10px;">
-                        <input type="number" id="emp_net" class="form-control" placeholder="Salário Líquido (Net)">
-                        <input type="number" id="emp_deps" class="form-control" value="0" placeholder="Dependentes">
+                        <input type="number" id="emp_net" class="form-control" placeholder="Net Salary (Pocket)">
+                        <input type="number" id="emp_deps" class="form-control" value="0" placeholder="Dependents">
                     </div>
                     
                     <div style="display:flex; gap:10px; margin-top: 10px;">
-                        <button id="btnCancelEmp" onclick="cancelEmpEdit()" class="btn btn-cancel" style="display:none;">Cancelar</button>
-                        <button id="btnSaveEmp" type="button" onclick="saveEmployee()" class="btn btn-primary btn-save">+ Adicionar W-2</button>
+                        <button id="btnCancelEmp" onclick="cancelEmpEdit()" class="btn btn-cancel" style="display:none;">Cancel</button>
+                        <button id="btnSaveEmp" type="button" onclick="saveEmployee()" class="btn btn-primary btn-save">+ Add W-2</button>
                     </div>
                 </div>
 
                 <div id="employeeList" class="scroll-list" style="max-height: 200px; margin-bottom: 20px; border-bottom: 1px solid #334155;">
-                    <p style="color:#64748b; text-align:center; padding:10px;">Carregando...</p>
+                    <p style="color:#64748b; text-align:center; padding:10px;">Loading data...</p>
                 </div>
 
                 <div class="section-header">Contractors (1099)</div>
                 <div id="contFormBox" class="form-container no-print">
                     <input type="hidden" id="cont_edit_id">
-                    <input type="text" id="cont_name" class="form-control" placeholder="Nome do Contractor" style="margin-bottom: 10px;">
+                    <input type="text" id="cont_name" class="form-control" placeholder="Contractor Name" style="margin-bottom: 10px;">
                     <div class="row-inputs-3">
-                        <input type="number" id="cont_rate" class="form-control" placeholder="Valor $">
+                        <input type="number" id="cont_rate" class="form-control" placeholder="Rate $">
                         <select id="cont_type" class="form-control">
-                            <option value="day">Diária</option>
-                            <option value="hour">Hora</option>
+                            <option value="day">Day</option>
+                            <option value="hour">Hour</option>
                         </select>
-                        <input type="number" id="cont_qty" class="form-control" placeholder="Qtd">
+                        <input type="number" id="cont_qty" class="form-control" placeholder="Qty">
                     </div>
                     
                     <div class="toggle-container">
                         <input type="checkbox" id="cont_active" class="toggle-checkbox" checked>
-                        <label for="cont_active" class="toggle-label">Ativo neste mês</label>
+                        <label for="cont_active" class="toggle-label">Active this month</label>
                     </div>
 
                     <div style="display:flex; gap:10px; margin-top: 10px;">
-                        <button id="btnCancelCont" onclick="cancelContEdit()" class="btn btn-cancel" style="display:none;">Cancelar</button>
-                        <button id="btnSaveCont" type="button" onclick="saveContractor()" class="btn btn-orange btn-save">+ Adicionar 1099</button>
+                        <button id="btnCancelCont" onclick="cancelContEdit()" class="btn btn-cancel" style="display:none;">Cancel</button>
+                        <button id="btnSaveCont" type="button" onclick="saveContractor()" class="btn btn-orange btn-save">+ Add 1099</button>
                     </div>
                 </div>
 
@@ -250,27 +250,27 @@
 
         <div class="mid-col">
             <div class="panel">
-                <div class="panel-title"><i class="fas fa-building"></i> 2. Custos Fixos (Overhead)</div>
+                <div class="panel-title"><i class="fas fa-building"></i> 2. Fixed Costs (Overhead)</div>
                 
                 <div id="costFormBox" class="form-container no-print">
                     <input type="hidden" id="cost_edit_id">
-                    <p style="font-size:0.8rem; color:#94a3b8; margin-top:0;">Aluguel, Seguros, Softwares, Veículos...</p>
+                    <p style="font-size:0.8rem; color:#94a3b8; margin-top:0;">Rent, Insurance, Software, Vehicles...</p>
                     <div class="row-inputs">
-                        <input type="text" id="cost_desc" class="form-control" placeholder="Descrição">
-                        <input type="number" id="cost_val" class="form-control" placeholder="Valor Mensal $">
+                        <input type="text" id="cost_desc" class="form-control" placeholder="Description">
+                        <input type="number" id="cost_val" class="form-control" placeholder="Monthly Value $">
                     </div>
                     
                     <div style="display:flex; gap:10px; margin-top: 10px;">
-                        <button id="btnCancelCost" onclick="cancelCostEdit()" class="btn btn-cancel" style="display:none;">Cancelar</button>
-                        <button id="btnSaveCost" type="button" onclick="saveFixedCost()" class="btn btn-success btn-save">+ Lançar Custo</button>
+                        <button id="btnCancelCost" onclick="cancelCostEdit()" class="btn btn-cancel" style="display:none;">Cancel</button>
+                        <button id="btnSaveCost" type="button" onclick="saveFixedCost()" class="btn btn-success btn-save">+ Add Cost</button>
                     </div>
                 </div>
 
                 <div id="fixedCostList" class="scroll-list">
-                    <p style="color:#64748b; text-align:center; padding:20px;">Carregando...</p>
+                    <p style="color:#64748b; text-align:center; padding:20px;">Loading...</p>
                 </div>
                 <div style="margin-top:auto; padding-top:10px; text-align:right; font-weight:bold; color:var(--warning); border-top:1px solid #334155;">
-                    Total Overhead (Mês): <span id="totalFixedDisplay">...</span>
+                    Total Overhead (Month): <span id="totalFixedDisplay">...</span>
                 </div>
             </div>
         </div>
@@ -278,22 +278,22 @@
         <div class="right-col">
             <div class="panel">
                 <div class="panel-title">
-                    <i class="fas fa-chart-line"></i> 3. Simulador & Metas
-                    <span id="syncStatus">Salvo na nuvem <i class="fas fa-check"></i></span>
+                    <i class="fas fa-chart-line"></i> 3. Simulator & Goals
+                    <span id="syncStatus">Saved to cloud <i class="fas fa-check"></i></span>
                 </div>
 
                 <div class="print-grid">
                     <div class="kpi-row">
                         <div class="kpi-card" style="border-bottom-color: var(--danger);">
-                            <div class="kpi-label">Custo Fixo Total</div>
+                            <div class="kpi-label">Total Fixed Cost</div>
                             <div class="kpi-val" id="totalOutflow">$0</div>
                         </div>
                         <div class="kpi-card" style="border-bottom-color: var(--cogs);">
-                            <div class="kpi-label">Ponto Equilíbrio</div>
+                            <div class="kpi-label">Break-even Point</div>
                             <div class="kpi-val" id="breakevenVal">$0</div>
                         </div>
                         <div class="kpi-card" style="border-bottom-color: var(--success);">
-                            <div class="kpi-label">Lucro Mensal Alvo</div>
+                            <div class="kpi-label">Target Monthly Profit</div>
                             <div class="kpi-val" id="targetProfitMonthly">$0</div>
                         </div>
                     </div>
@@ -302,21 +302,21 @@
                         <div class="no-print">
                             <div class="slider-group">
                                 <label class="slider-label" style="color:var(--success);">
-                                    <span>Meta Lucro Anual (Dono)</span> <span id="profitDisplay">...</span>
+                                    <span>Annual Profit Goal (Owner)</span> <span id="profitDisplay">...</span>
                                 </label>
                                 <input type="range" id="profitSlider" class="sim-slider" min="0" max="500000" step="5000" onchange="saveSettingsToDB()" oninput="updateSimulation()">
                             </div>
 
                             <div class="slider-group">
                                 <label class="slider-label" style="color:var(--accent);">
-                                    <span>Margem Bruta Venda (Markup)</span> <span id="grossDisplay">...</span>
+                                    <span>Gross Margin (Markup)</span> <span id="grossDisplay">...</span>
                                 </label>
                                 <input type="range" id="grossSlider" class="sim-slider" min="10" max="90" onchange="saveSettingsToDB()" oninput="updateSimulation()">
                             </div>
                             
                             <div class="slider-group">
                                 <label class="slider-label" style="color:var(--purple);">
-                                    <span>Comissão Vendas</span> <span id="commDisplay">...</span>
+                                    <span>Sales Commission</span> <span id="commDisplay">...</span>
                                 </label>
                                 <input type="range" id="commSlider" class="sim-slider" min="0" max="20" onchange="saveSettingsToDB()" oninput="updateSimulation()">
                             </div>
@@ -324,28 +324,28 @@
                         
                         <table class="projection-table">
                             <tr>
-                                <td><i class="fas fa-arrow-down" style="color:var(--danger)"></i> Custos Fixos (Payroll+Overhead)</td>
+                                <td><i class="fas fa-arrow-down" style="color:var(--danger)"></i> Fixed Costs (Payroll+Overhead)</td>
                                 <td class="val" id="simFixed">$0</td>
                             </tr>
                             <tr>
-                                <td><i class="fas fa-arrow-up" style="color:var(--success)"></i> Meta Lucro Mensal</td>
+                                <td><i class="fas fa-arrow-up" style="color:var(--success)"></i> Target Monthly Profit</td>
                                 <td class="val row-highlight" id="simProfit">$0</td>
                             </tr>
                             <tr>
-                                <td><i class="fas fa-box" style="color:var(--cogs)"></i> Custo Materiais (COGS)</td>
+                                <td><i class="fas fa-box" style="color:var(--cogs)"></i> Material Cost (COGS)</td>
                                 <td class="val" style="color:var(--cogs)" id="simCOGS">$0</td>
                             </tr>
                             <tr>
-                                <td><i class="fas fa-user-tag" style="color:var(--purple)"></i> Comissões (<span id="commPctText">...</span>)</td>
+                                <td><i class="fas fa-user-tag" style="color:var(--purple)"></i> Commissions (<span id="commPctText">...</span>)</td>
                                 <td class="val" style="color:var(--purple)" id="simComm">$0</td>
                             </tr>
                             <tr style="border-top: 2px solid #475569; background:#0f172a;">
-                                <td style="padding:12px; font-weight:bold; color:white;">FATURAMENTO NECESSÁRIO</td>
+                                <td style="padding:12px; font-weight:bold; color:white;">REQUIRED REVENUE</td>
                                 <td class="val row-total" style="padding:12px;" id="simRevenue">$0</td>
                             </tr>
                             <tr>
                                 <td colspan="2" class="row-breakeven" align="center">
-                                    Para pagar contas (Lucro $0), fature: <span id="beSmall">$0</span>
+                                    To pay bills ($0 Profit), revenue needed: <span id="beSmall">$0</span>
                                 </td>
                             </tr>
                         </table>
@@ -357,25 +357,25 @@
                 </div>
 
                 <div class="report-only">
-                    <h3>Detalhamento da Equipe (Payroll & Contractors)</h3>
+                    <h3>Team Breakdown (Payroll & Contractors)</h3>
                     <table class="full-table">
                         <thead>
                             <tr>
-                                <th>Nome</th>
-                                <th>Tipo</th>
-                                <th>Detalhes</th>
-                                <th>Custo Total</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Details</th>
+                                <th>Total Cost</th>
                             </tr>
                         </thead>
                         <tbody id="reportTableBody"></tbody>
                     </table>
                     
-                    <h3 style="margin-top:20px;">Detalhamento de Custos Fixos (Overhead)</h3>
+                    <h3 style="margin-top:20px;">Fixed Costs Breakdown (Overhead)</h3>
                     <table class="full-table">
                         <thead>
                             <tr>
-                                <th>Descrição do Custo</th>
-                                <th style="text-align:right;">Valor</th>
+                                <th>Description</th>
+                                <th style="text-align:right;">Value</th>
                             </tr>
                         </thead>
                         <tbody id="reportCostsBody"></tbody>
@@ -383,7 +383,7 @@
                 </div>
                 
                 <button onclick="window.print()" class="btn btn-primary no-print" style="margin-top:20px;">
-                    <i class="fas fa-print"></i> Imprimir Relatório Executivo
+                    <i class="fas fa-print"></i> Print Executive Report
                 </button>
             </div>
         </div>
@@ -393,14 +393,14 @@
 <div class="modal-overlay" id="empModal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">×</span>
-        <h3 id="modalName">Detalhes</h3>
+        <h3 id="modalName">Details</h3>
         <table class="projection-table" style="font-size:1.1rem;">
-            <tr><td>Líquido (No Bolso)</td><td class="val" id="modalNet" style="color:var(--success)">$0</td></tr>
-            <tr><td>Taxas (Retido Func.)</td><td class="val" id="modalTaxEmp" style="color:#ef4444">$0</td></tr>
-            <tr style="border-top:1px dashed #666"><td><strong>Salário Bruto</strong></td><td class="val" id="modalGross">$0</td></tr>
-            <tr><td>Taxas (Empresa)</td><td class="val" id="modalTaxComp">$0</td></tr>
+            <tr><td>Net (In Pocket)</td><td class="val" id="modalNet" style="color:var(--success)">$0</td></tr>
+            <tr><td>Taxes (Employee Withheld)</td><td class="val" id="modalTaxEmp" style="color:#ef4444">$0</td></tr>
+            <tr style="border-top:1px dashed #666"><td><strong>Gross Salary</strong></td><td class="val" id="modalGross">$0</td></tr>
+            <tr><td>Taxes (Employer)</td><td class="val" id="modalTaxComp">$0</td></tr>
             <tr style="background:#1e293b; border-top:2px solid var(--accent)">
-                <td style="padding:15px"><strong>Custo Total Empresa</strong></td>
+                <td style="padding:15px"><strong>Total Company Cost</strong></td>
                 <td class="val" id="modalTotal" style="padding:15px; color:var(--accent)">$0</td>
             </tr>
         </table>
@@ -431,7 +431,7 @@
         console.log("Firebase Connected");
     } catch(e) {
         console.error("Firebase Config Error", e);
-        alert("Erro de configuração Firebase.");
+        alert("Firebase Configuration Error.");
     }
 
     // --- GLOBAL VARIABLES ---
@@ -539,7 +539,7 @@
         const name = document.getElementById('emp_name').value;
         const net = parseFloat(document.getElementById('emp_net').value);
         
-        if(!name || isNaN(net)) return alert('Preencha nome e valor líquido');
+        if(!name || isNaN(net)) return alert('Please fill in name and net value');
 
         const data = {
             name,
@@ -565,7 +565,7 @@
         document.getElementById('emp_deps').value = emp.deps;
         
         document.getElementById('empFormBox').classList.add('editing');
-        document.getElementById('btnSaveEmp').innerText = "Salvar";
+        document.getElementById('btnSaveEmp').innerText = "Save";
         document.getElementById('btnSaveEmp').className = "btn btn-warning btn-save";
         document.getElementById('btnCancelEmp').style.display = "block";
     }
@@ -574,12 +574,12 @@
         clearEmpForm();
         document.getElementById('emp_edit_id').value = "";
         document.getElementById('empFormBox').classList.remove('editing');
-        document.getElementById('btnSaveEmp').innerText = "+ Adicionar W-2";
+        document.getElementById('btnSaveEmp').innerText = "+ Add W-2";
         document.getElementById('btnSaveEmp').className = "btn btn-primary btn-save";
         document.getElementById('btnCancelEmp').style.display = "none";
     }
 
-    async function removeEmp(id) { if(confirm("Remover funcionário?")) await deleteDoc(doc(db, "act_employees", id)); }
+    async function removeEmp(id) { if(confirm("Remove employee?")) await deleteDoc(doc(db, "act_employees", id)); }
     function clearEmpForm() { document.getElementById('emp_name').value = ''; document.getElementById('emp_net').value = ''; }
 
     // --- CRUD CONTRACTORS (1099) ---
@@ -589,7 +589,7 @@
         const rate = parseFloat(document.getElementById('cont_rate').value);
         const qty = parseFloat(document.getElementById('cont_qty').value);
         
-        if(!name || isNaN(rate) || isNaN(qty)) return alert('Preencha nome, valor e quantidade');
+        if(!name || isNaN(rate) || isNaN(qty)) return alert('Please fill in name, rate and quantity');
 
         const data = {
             name,
@@ -615,7 +615,7 @@
         document.getElementById('cont_active').checked = cont.active;
         
         document.getElementById('contFormBox').classList.add('editing');
-        document.getElementById('btnSaveCont').innerText = "Salvar";
+        document.getElementById('btnSaveCont').innerText = "Save";
         document.getElementById('btnSaveCont').className = "btn btn-warning btn-save";
         document.getElementById('btnCancelCont').style.display = "block";
     }
@@ -624,12 +624,12 @@
         clearContForm();
         document.getElementById('cont_edit_id').value = "";
         document.getElementById('contFormBox').classList.remove('editing');
-        document.getElementById('btnSaveCont').innerText = "+ Adicionar 1099";
+        document.getElementById('btnSaveCont').innerText = "+ Add 1099";
         document.getElementById('btnSaveCont').className = "btn btn-orange btn-save";
         document.getElementById('btnCancelCont').style.display = "none";
     }
 
-    async function removeCont(id) { if(confirm("Remover contractor?")) await deleteDoc(doc(db, "act_contractors", id)); }
+    async function removeCont(id) { if(confirm("Remove contractor?")) await deleteDoc(doc(db, "act_contractors", id)); }
     function clearContForm() { document.getElementById('cont_name').value = ''; document.getElementById('cont_rate').value = ''; document.getElementById('cont_qty').value = ''; document.getElementById('cont_active').checked = true; }
 
 
@@ -639,7 +639,7 @@
         const desc = document.getElementById('cost_desc').value;
         const val = parseFloat(document.getElementById('cost_val').value);
         
-        if(!desc || isNaN(val)) return alert('Preencha descrição e valor');
+        if(!desc || isNaN(val)) return alert('Please fill in description and value');
 
         const data = { desc, val };
 
@@ -656,7 +656,7 @@
         document.getElementById('cost_val').value = cost.val;
         
         document.getElementById('costFormBox').classList.add('editing');
-        document.getElementById('btnSaveCost').innerText = "Salvar";
+        document.getElementById('btnSaveCost').innerText = "Save";
         document.getElementById('btnSaveCost').className = "btn btn-warning btn-save";
         document.getElementById('btnCancelCost').style.display = "block";
     }
@@ -665,12 +665,12 @@
         clearCostForm();
         document.getElementById('cost_edit_id').value = "";
         document.getElementById('costFormBox').classList.remove('editing');
-        document.getElementById('btnSaveCost').innerText = "+ Lançar Custo";
+        document.getElementById('btnSaveCost').innerText = "+ Add Cost";
         document.getElementById('btnSaveCost').className = "btn btn-success btn-save";
         document.getElementById('btnCancelCost').style.display = "none";
     }
 
-    async function removeCost(id) { if(confirm("Remover custo?")) await deleteDoc(doc(db, "act_costs", id)); }
+    async function removeCost(id) { if(confirm("Remove cost?")) await deleteDoc(doc(db, "act_costs", id)); }
     function clearCostForm() { document.getElementById('cost_desc').value = ''; document.getElementById('cost_val').value = ''; }
 
     // --- RENDER & SIMULATION ---
@@ -714,7 +714,7 @@
             const cost = c.rate * c.qty;
             if(c.active) totalPayroll += cost;
             
-            const typeLabel = c.type === 'day' ? 'dias' : 'hrs';
+            const typeLabel = c.type === 'day' ? 'days' : 'hrs';
             const statusClass = c.active ? 'contractor' : 'inactive';
             const icon = c.active ? '<i class="fas fa-check-circle" style="color:var(--success)"></i>' : '<i class="fas fa-ban" style="color:gray"></i>';
 
@@ -775,7 +775,7 @@
         const grossMargin = parseInt(document.getElementById('grossSlider').value);
         const commPct = parseInt(document.getElementById('commSlider').value);
         
-        document.getElementById('profitDisplay').innerText = '$' + (targetAnnualProfit/1000).toFixed(0) + 'k/ano';
+        document.getElementById('profitDisplay').innerText = '$' + (targetAnnualProfit/1000).toFixed(0) + 'k/yr';
         document.getElementById('grossDisplay').innerText = grossMargin + '%';
         document.getElementById('commDisplay').innerText = commPct + '%';
         document.getElementById('commPctText').innerText = commPct + '%';
@@ -814,7 +814,7 @@
         mainChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Materiais (COGS)', 'Comissões', 'Custos Fixos', 'Lucro Líquido'],
+                labels: ['Material (COGS)', 'Commissions', 'Fixed Costs', 'Net Profit'],
                 datasets: [{ 
                     data: [cogs, comm, fixed, profit], 
                     backgroundColor: ['#64748b', '#8b5cf6', '#ef4444', '#10b981'], 
@@ -846,7 +846,7 @@
         modalChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Net', 'Taxas', 'Custo Total'],
+                labels: ['Net', 'Taxes', 'Total Cost'],
                 datasets: [{ data: [f.net, f.empTax+f.compTax, f.totalCost], backgroundColor: ['#10b981', '#f59e0b', '#3b82f6'] }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }

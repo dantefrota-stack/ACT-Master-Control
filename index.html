@@ -3,45 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Report v22 | All Cabling Tech</title>
+    <title>Executive Report v28 | All Cabling Tech</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --bg-dark: #0f172a; --panel-dark: #1e293b; --accent: #3b82f6; --text-main: #f8fafc; --text-muted: #94a3b8; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --purple: #8b5cf6; --orange: #f97316; }
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); margin: 0; padding: 20px; font-size: 14px; min-height: 100vh; overflow-y: auto; }
+        
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 20px; 
+            font-size: 14px; 
+            min-height: 100vh;
+            overflow-y: auto; 
+        }
+        
         .container { max-width: 1400px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 15px; }
-        .logo-img { height: 60px; display: block; margin-left: auto; }
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 20px; align-items: stretch; }
-        @media(max-width: 1200px) { .main-grid { grid-template-columns: 1fr 1fr; } .right-col { grid-column: span 2; } }
-        @media(max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .right-col { grid-column: span 1; } }
-        .panel { background: var(--panel-dark); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); display: flex; flex-direction: column; height: 100%; min-height: 600px; }
-        .panel-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--accent); border-bottom: 1px solid #334155; padding-bottom: 10px; }
-        .form-container { background: #334155; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; }
-        .form-container.active { display: block; }
-        .btn-add-trigger { width: 100%; padding: 12px; background: #334155; border: 2px dashed #475569; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 10px; text-align: center; }
-        .form-control { width: 100%; background: #1e293b; border: 1px solid #475569; color: white; padding: 10px; border-radius: 6px; margin-bottom: 5px; }
-        .btn { padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; border: none; color: white; margin-top: 5px; }
-        .btn-primary { background: var(--accent); } .btn-success { background: var(--success); } .btn-warning { background: var(--warning); color: #0f172a; } .btn-orange { background: var(--orange); } .btn-cancel { background: #64748b; }
-        .scroll-list { overflow-y: auto; padding-right: 5px; flex-grow: 1; min-height: 100px; max-height: 50vh; }
-        .list-card { background: #334155; border-radius: 8px; padding: 10px; margin-bottom: 8px; border-left: 4px solid #94a3b8; display: flex; justify-content: space-between; align-items: center; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .logo-img { height: 50px; display: block; margin-left: auto; }
+        
+        .main-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1.4fr; 
+            gap: 20px; 
+            align-items: start; 
+        }
+        
+        @media(max-width: 1200px) { 
+            .main-grid { grid-template-columns: 1fr 1fr; } 
+            .right-col { grid-column: span 2; } 
+            .panel { height: auto !important; min-height: 500px; }
+        }
+        @media(max-width: 800px) { 
+            .main-grid { grid-template-columns: 1fr; } 
+            .right-col { grid-column: span 1; } 
+        }
+        
+        .panel { 
+            background: var(--panel-dark); 
+            border-radius: 12px; 
+            padding: 20px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
+            display: flex; 
+            flex-direction: column; 
+            border: 1px solid #334155;
+            position: relative;
+        }
+        
+        .panel-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--accent); border-bottom: 1px solid #334155; padding-bottom: 10px; flex-shrink: 0; }
+        
+        .fill-space {
+            flex: 1; 
+            overflow-y: auto; 
+            padding-right: 5px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        
+        .fill-space::-webkit-scrollbar { width: 6px; }
+        .fill-space::-webkit-scrollbar-track { background: #1e293b; }
+        .fill-space::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+
+        .list-card { 
+            background: #334155; 
+            border-radius: 8px; 
+            padding: 10px; 
+            margin-bottom: 8px; 
+            border-left: 4px solid #94a3b8; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 15px;
+            flex-shrink: 0; 
+        }
+        
+        .list-card > div:first-child { flex: 1; min-width: 0; line-height: 1.3; }
+        .list-card > div:last-child { flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; }
         .list-card.expense { border-left-color: var(--warning); } .list-card.payroll { border-left-color: var(--accent); } .list-card.contractor { border-left-color: var(--orange); }
-        .card-val { font-family: monospace; font-weight: bold; color: var(--success); }
+        .card-val { font-family: monospace; font-weight: bold; color: var(--success); margin-right: 10px; font-size: 0.95rem; }
+        
+        .form-container { background: #334155; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; flex-shrink: 0; }
+        .form-container.active { display: block; }
+        .btn-add-trigger { width: 100%; padding: 10px; background: #334155; border: 2px dashed #475569; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 10px; text-align: center; flex-shrink: 0; font-size: 0.8rem; }
+        .form-control { width: 100%; background: #1e293b; border: 1px solid #475569; color: white; padding: 8px; border-radius: 6px; margin-bottom: 5px; }
+        .btn { padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; border: none; color: white; margin-top: 5px; }
+        .btn-primary { background: var(--accent); } .btn-success { background: var(--success); } .btn-warning { background: var(--warning); color: #0f172a; } .btn-orange { background: var(--orange); } 
+        
+        .panel-footer {
+            margin-top: auto;
+            padding-top: 15px; 
+            border-top: 1px solid #334; 
+            text-align: right; 
+            font-weight: bold;
+            flex-shrink: 0;
+            background: var(--panel-dark); 
+        }
+
         .kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .kpi-card { background: #334155; padding: 10px; border-radius: 8px; text-align: center; border-bottom: 3px solid transparent; }
         .kpi-val { font-size: 1.1rem; font-weight: 800; font-family: monospace; }
-        .simulator-box { background: #1e293b; border: 1px solid #334155; padding: 15px; border-radius: 12px; }
+        .simulator-box { background: #1e293b; border: 1px solid #334155; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .sim-slider { width: 100%; margin: 10px 0; }
         .projection-table { width: 100%; margin-top: 10px; font-size: 0.9rem; border-collapse: collapse; }
         .projection-table td { padding: 5px; border-bottom: 1px solid #334155; }
+        
         .cost-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
-        .cost-table td, .cost-table th { padding: 5px; border-bottom: 1px solid #334155; text-align: left; }
+        .cost-table td { padding: 8px 5px; border-bottom: 1px solid #334155; text-align: left; vertical-align: middle; }
+        .cost-table th { padding: 5px; border-bottom: 1px solid #334155; text-align: left; }
+        
         .val-col { text-align: right; font-family: monospace; }
         .row-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-icon { background: transparent; color: #94a3b8; border: none; cursor: pointer; font-size: 1rem; margin-left: 5px; }
+        .btn-icon { background: transparent; color: #94a3b8; border: none; cursor: pointer; font-size: 1rem; margin-left: 8px; transition: color 0.2s; }
+        .btn-icon:hover { color: #fff; }
         
-        /* --- ESTILOS DO SMART POPOVER (NOVO) --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
         .modal-content { background: var(--panel-dark); width: 90%; max-width: 500px; padding: 0; border-radius: 12px; border: 1px solid var(--accent); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); overflow: hidden; animation: popUp 0.2s ease-out; }
         @keyframes popUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -58,7 +135,7 @@
         .detail-item:last-child { border-bottom: none; }
         .cat-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
 
-        @media print { .no-print, .btn-add-trigger, .btn { display: none !important; } .container { max-width: 100%; } }
+        @media print { .no-print, .btn-add-trigger, .btn { display: none !important; } .container { max-width: 100%; height: auto; } .scroll-list, .fill-space { height: auto; overflow: visible; } .panel { height: auto !important; } }
     </style>
 </head>
 <body>
@@ -66,7 +143,7 @@
 <div class="container">
     <header class="header">
         <div>
-            <h1 style="font-size:1.2rem; color:#94a3b8; margin:0;">EXECUTIVE REPORT v22</h1>
+            <h1 style="font-size:1.2rem; color:#94a3b8; margin:0;">EXECUTIVE REPORT v28</h1>
             <div id="dateDisplay" style="color:var(--accent); font-weight:bold; font-size:1.1rem;"></div>
         </div>
         <img src="https://lh3.googleusercontent.com/d/1Zlo-Cf7zY-jANUusmo5iwCR8ADbPu6wx" alt="ACT" class="logo-img" onerror="this.style.display='none'">
@@ -74,65 +151,73 @@
 
     <div class="main-grid">
         <div class="left-col">
-            <div class="panel">
+            <div class="panel" id="panel1">
                 <div class="panel-title">1. Team Management</div>
                 
-                <div class="section-header">EMPLOYEES (W-2)</div>
-                <div class="btn-add-trigger no-print" onclick="toggle('empForm')">+ Add Employee</div>
-                <div id="empForm" class="form-container">
-                    <input type="hidden" id="emp_id">
-                    <input type="text" id="emp_name" class="form-control" placeholder="Name">
-                    <div class="row-inputs">
-                        <select id="emp_state" class="form-control"><option value="FL">FL</option><option value="NY">NY</option></select>
-                        <input type="number" id="emp_net" class="form-control" placeholder="Net Salary">
+                <div class="fill-space">
+                    <div class="section-header">EMPLOYEES (W-2)</div>
+                    <div class="btn-add-trigger no-print" onclick="toggle('empForm')">+ Add Employee</div>
+                    <div id="empForm" class="form-container">
+                        <input type="hidden" id="emp_id">
+                        <input type="text" id="emp_name" class="form-control" placeholder="Name">
+                        <div class="row-inputs">
+                            <select id="emp_state" class="form-control"><option value="FL">FL</option><option value="NY">NY</option></select>
+                            <input type="number" id="emp_net" class="form-control" placeholder="Net Salary">
+                        </div>
+                        <button class="btn btn-primary" onclick="saveEmployee()">Save W-2</button>
                     </div>
-                    <button class="btn btn-primary" onclick="saveEmployee()">Save W-2</button>
-                </div>
-                <div id="listEmp" class="scroll-list">Loading...</div>
+                    
+                    <div id="listEmp">Loading...</div>
 
-                <div class="section-header" style="margin-top:20px;">CONTRACTORS (1099)</div>
-                <div class="btn-add-trigger no-print" onclick="toggle('contForm')">+ Add Contractor</div>
-                <div id="contForm" class="form-container">
-                    <input type="hidden" id="cont_id">
-                    <input type="text" id="cont_name" class="form-control" placeholder="Name">
-                    <div class="row-inputs">
-                        <input type="number" id="cont_rate" class="form-control" placeholder="Rate $">
-                        <input type="number" id="cont_qty" class="form-control" placeholder="Qty">
+                    <div class="section-header" style="margin-top:20px;">CONTRACTORS (1099)</div>
+                    <div class="btn-add-trigger no-print" onclick="toggle('contForm')">+ Add Contractor</div>
+                    <div id="contForm" class="form-container">
+                        <input type="hidden" id="cont_id">
+                        <input type="text" id="cont_name" class="form-control" placeholder="Name">
+                        <div class="row-inputs">
+                            <input type="number" id="cont_rate" class="form-control" placeholder="Rate $">
+                            <input type="number" id="cont_qty" class="form-control" placeholder="Qty">
+                        </div>
+                        <select id="cont_type" class="form-control"><option value="day">Day</option><option value="hour">Hour</option></select>
+                        <label style="display:block; margin-top:5px;"><input type="checkbox" id="cont_active" checked> Active this month</label>
+                        <button class="btn btn-orange" onclick="saveContractor()">Save 1099</button>
                     </div>
-                    <select id="cont_type" class="form-control"><option value="day">Day</option><option value="hour">Hour</option></select>
-                    <label style="display:block; margin-top:5px;"><input type="checkbox" id="cont_active" checked> Active this month</label>
-                    <button class="btn btn-orange" onclick="saveContractor()">Save 1099</button>
-                </div>
-                <div id="listCont" class="scroll-list"></div>
-                
-                <div style="margin-top:auto; padding-top:10px; border-top:1px solid #334; text-align:right; color:var(--accent); font-weight:bold;">
+                    <div id="listCont"></div>
+                </div> 
+
+                <div class="panel-footer" style="color:var(--accent);">
                     Total Payroll: <span id="dispPayroll">$0.00</span>
                 </div>
             </div>
         </div>
 
         <div class="mid-col">
-            <div class="panel">
+            <div class="panel" id="panel2">
                 <div class="panel-title">2. Fixed Costs (Overhead)</div>
-                <div class="btn-add-trigger no-print" onclick="toggle('costForm')">+ Add Cost</div>
-                <div id="costForm" class="form-container">
-                    <input type="hidden" id="cost_id">
-                    <div class="row-inputs">
-                        <input type="number" id="cost_day" class="form-control" placeholder="Day" style="flex:1">
-                        <input type="number" id="cost_val" class="form-control" placeholder="Value $" style="flex:2">
+                
+                <div class="fill-space">
+                    <div class="btn-add-trigger no-print" onclick="toggle('costForm')">+ Add Cost</div>
+                    <div id="costForm" class="form-container">
+                        <input type="hidden" id="cost_id">
+                        <div class="row-inputs">
+                            <input type="number" id="cost_day" class="form-control" placeholder="Day" style="flex:1">
+                            <input type="number" id="cost_val" class="form-control" placeholder="Value $" style="flex:2">
+                        </div>
+                        <input type="text" id="cost_desc" class="form-control" placeholder="Description">
+                        <button class="btn btn-success" onclick="saveCost()">Save Cost</button>
                     </div>
-                    <input type="text" id="cost_desc" class="form-control" placeholder="Description">
-                    <button class="btn btn-success" onclick="saveCost()">Save Cost</button>
-                </div>
-                <div id="listCost" class="scroll-list">Loading...</div>
-                <div style="margin-top:auto; padding-top:10px; border-top:1px solid #334; text-align:right; color:var(--warning); font-weight:bold;">
+                    
+                    <div id="listCost">Loading...</div>
+                </div> 
+                
+                <div class="panel-footer" style="color:var(--warning);">
                     Total Overhead: <span id="dispFixed">$0.00</span>
                 </div>
             </div>
         </div>
 
         <div class="right-col">
-            <div class="panel">
+            <div class="panel" id="panel3" style="height: auto;">
                 <div class="panel-title">3. Simulator & Goals</div>
                 
                 <div class="kpi-row">
@@ -160,7 +245,7 @@
 
                 <div style="height:150px; margin-top:20px; position: relative;">
                     <canvas id="cashChart" style="cursor: pointer;"></canvas>
-                    <div style="font-size: 0.7rem; text-align: center; color: #64748b; margin-top: 5px;">* Click columns for weekly breakdown</div>
+                    <div style="font-size: 0.7rem; text-align: center; color: #64748b; margin-top: 5px;">* Click columns for breakdown</div>
                 </div>
 
                 <div style="margin-top:20px; border-top:1px solid #334; padding-top:10px;">
@@ -175,13 +260,14 @@
                     </table>
 
                     <div class="simulator-box" style="margin-top:10px; border:1px dashed #475569;">
-                        <div style="font-size:0.7rem; color:#94a3b8;">QUICK PROPOSAL</div>
+                        <div style="font-size:0.7rem; color:#94a3b8; text-transform:uppercase;">Quick Proposal</div>
                         <input type="number" id="propDays" class="form-control" placeholder="Days" style="padding:5px; margin-bottom:5px;" oninput="runSim()">
                         <div style="display:flex; justify-content:space-between;">
                             <span>Min Cost:</span><span id="propMin" style="color:var(--danger); font-weight:bold">$0</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between;">
-                            <span>Price:</span><span id="propPrice" style="color:var(--success); font-weight:bold; font-size:1.1rem">$0</span>
+                        <div style="display:flex; justify-content:space-between; margin-top:5px; align-items:center;">
+                            <span style="line-height:1.1">Target Price<br><small style="color:#64748b; font-size:0.75rem;">(w/ <span id="propMarkupDisplay">0%</span> Mkp)</small></span>
+                            <span id="propPrice" style="color:var(--success); font-weight:bold; font-size:1.2rem">$0</span>
                         </div>
                     </div>
                 </div>
@@ -200,34 +286,22 @@
             </div>
             <span style="cursor:pointer; font-size:1.5rem; color:#94a3b8;" onclick="document.getElementById('smartPopover').style.display='none'">×</span>
         </div>
-        
         <div class="pop-body">
             <div class="big-number-box">
                 <span style="color:#94a3b8; font-size:0.9rem;">Total to Provision</span>
                 <span id="popTotal" style="font-size:1.4rem; font-weight:bold; color:var(--success)">$0.00</span>
             </div>
-
             <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#cbd5e1;">
-                <span>Payroll</span>
-                <span id="popPayrollVal">$0</span>
+                <span>Payroll</span><span id="popPayrollVal">$0</span>
             </div>
-            <div class="progress-bar-bg">
-                <div id="popPayrollBar" class="progress-fill" style="background-color: var(--success); width: 0%;"></div>
-            </div>
-
+            <div class="progress-bar-bg"><div id="popPayrollBar" class="progress-fill" style="background-color: var(--success); width: 0%;"></div></div>
             <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#cbd5e1;">
-                <span>Overhead</span>
-                <span id="popOverheadVal">$0</span>
+                <span>Overhead</span><span id="popOverheadVal">$0</span>
             </div>
-            <div class="progress-bar-bg">
-                <div id="popOverheadBar" class="progress-fill" style="background-color: var(--accent); width: 0%;"></div>
-            </div>
-
+            <div class="progress-bar-bg"><div id="popOverheadBar" class="progress-fill" style="background-color: var(--accent); width: 0%;"></div></div>
             <div style="border-top: 1px solid #334155; margin: 15px 0;"></div>
-
             <div style="font-size:0.75rem; text-transform:uppercase; color:#64748b; margin-bottom:10px; font-weight:bold;">Top Expenses</div>
-            <ul id="popList" class="detail-list">
-                </ul>
+            <ul id="popList" class="detail-list"></ul>
         </div>
     </div>
 </div>
@@ -256,72 +330,50 @@
     };
     
     let chartInstance = null;
-    // Armazena os detalhes para o Popover
     let weeklyDetailsStore = [];
 
-    // --- EXPOSED FUNCTIONS ---
+    const syncHeights = () => {
+        if(window.innerWidth <= 1200) return; 
+        const p3 = document.getElementById('panel3');
+        const h = p3.offsetHeight; 
+        if(h > 400) {
+            document.getElementById('panel1').style.height = h + 'px';
+            document.getElementById('panel2').style.height = h + 'px';
+        }
+    };
+    window.addEventListener('resize', syncHeights);
+    setInterval(syncHeights, 1000);
+
     window.toggle = (id) => { const el = document.getElementById(id); el.style.display = el.style.display==='block'?'none':'block'; };
     window.saveEmployee = async () => {
         const id = document.getElementById('emp_id').value;
-        const data = {
-            name: document.getElementById('emp_name').value,
-            state: document.getElementById('emp_state').value,
-            net: Number(document.getElementById('emp_net').value) || 0
-        };
-        if(id) await updateDoc(doc(db, 'act_employees', id), data);
-        else await addDoc(collection(db, 'act_employees'), data);
+        const data = { name: document.getElementById('emp_name').value, state: document.getElementById('emp_state').value, net: Number(document.getElementById('emp_net').value) || 0 };
+        if(id) await updateDoc(doc(db, 'act_employees', id), data); else await addDoc(collection(db, 'act_employees'), data);
         resetForms();
     };
     window.saveContractor = async () => {
         const id = document.getElementById('cont_id').value;
-        const data = {
-            name: document.getElementById('cont_name').value,
-            rate: Number(document.getElementById('cont_rate').value) || 0,
-            qty: Number(document.getElementById('cont_qty').value) || 0,
-            type: document.getElementById('cont_type').value,
-            active: document.getElementById('cont_active').checked
-        };
-        if(id) await updateDoc(doc(db, 'act_contractors', id), data);
-        else await addDoc(collection(db, 'act_contractors'), data);
+        const data = { name: document.getElementById('cont_name').value, rate: Number(document.getElementById('cont_rate').value) || 0, qty: Number(document.getElementById('cont_qty').value) || 0, type: document.getElementById('cont_type').value, active: document.getElementById('cont_active').checked };
+        if(id) await updateDoc(doc(db, 'act_contractors', id), data); else await addDoc(collection(db, 'act_contractors'), data);
         resetForms();
     };
     window.saveCost = async () => {
         const id = document.getElementById('cost_id').value;
-        const data = {
-            desc: document.getElementById('cost_desc').value,
-            val: Number(document.getElementById('cost_val').value) || 0,
-            day: Number(document.getElementById('cost_day').value) || 1
-        };
-        if(id) await updateDoc(doc(db, 'act_costs', id), data);
-        else await addDoc(collection(db, 'act_costs'), data);
+        const data = { desc: document.getElementById('cost_desc').value, val: Number(document.getElementById('cost_val').value) || 0, day: Number(document.getElementById('cost_day').value) || 1 };
+        if(id) await updateDoc(doc(db, 'act_costs', id), data); else await addDoc(collection(db, 'act_costs'), data);
         resetForms();
     };
     window.editItem = (type, id) => {
-        if(type==='emp'){
-            const i = store.employees.find(x=>x.id===id);
-            document.getElementById('emp_id').value=i.id; document.getElementById('emp_name').value=i.name;
-            document.getElementById('emp_net').value=i.net; document.getElementById('empForm').style.display='block';
-        } else if(type==='cont'){
-            const i = store.contractors.find(x=>x.id===id);
-            document.getElementById('cont_id').value=i.id; document.getElementById('cont_name').value=i.name;
-            document.getElementById('cont_rate').value=i.rate; document.getElementById('cont_qty').value=i.qty;
-            document.getElementById('cont_active').checked=i.active; document.getElementById('contForm').style.display='block';
-        } else {
-            const i = store.costs.find(x=>x.id===id);
-            document.getElementById('cost_id').value=i.id; document.getElementById('cost_desc').value=i.desc;
-            document.getElementById('cost_val').value=i.val; document.getElementById('cost_day').value=i.day;
-            document.getElementById('costForm').style.display='block';
-        }
+        if(type==='emp'){ const i = store.employees.find(x=>x.id===id); document.getElementById('emp_id').value=i.id; document.getElementById('emp_name').value=i.name; document.getElementById('emp_net').value=i.net; document.getElementById('empForm').style.display='block'; }
+        else if(type==='cont'){ const i = store.contractors.find(x=>x.id===id); document.getElementById('cont_id').value=i.id; document.getElementById('cont_name').value=i.name; document.getElementById('cont_rate').value=i.rate; document.getElementById('cont_qty').value=i.qty; document.getElementById('cont_active').checked=i.active; document.getElementById('contForm').style.display='block'; }
+        else { const i = store.costs.find(x=>x.id===id); document.getElementById('cost_id').value=i.id; document.getElementById('cost_desc').value=i.desc; document.getElementById('cost_val').value=i.val; document.getElementById('cost_day').value=i.day; document.getElementById('costForm').style.display='block'; }
     };
     window.deleteItem = async (coll, id) => { if(confirm('Delete?')) await deleteDoc(doc(db, coll, id)); };
-    window.runSim = runCalculations;
     
-    function resetForms() {
-        document.querySelectorAll('input').forEach(i => { if(i.type!=='checkbox' && i.type!=='range') i.value=''; });
-        document.querySelectorAll('.form-container').forEach(d => d.style.display='none');
-    }
+    window.runSim = () => { runCalculations(); setTimeout(syncHeights, 100); }; 
+    
+    function resetForms() { document.querySelectorAll('input').forEach(i => { if(i.type!=='checkbox' && i.type!=='range') i.value=''; }); document.querySelectorAll('.form-container').forEach(d => d.style.display='none'); }
 
-    // --- DB LISTENERS ---
     if(db) {
         onSnapshot(doc(db, 'act_settings', 'global'), s => { if(s.exists()) { store.settings = s.data(); updateSliders(); } });
         onSnapshot(collection(db, 'act_employees'), s => { store.employees = s.docs.map(d=>({id:d.id, ...d.data()})); runCalculations(); });
@@ -329,222 +381,111 @@
         onSnapshot(collection(db, 'act_costs'), s => { store.costs = s.docs.map(d=>({id:d.id, ...d.data()})); runCalculations(); });
     }
 
-    function updateSliders() {
-        document.getElementById('slProfit').value = store.settings.profit;
-        document.getElementById('slGross').value = store.settings.gross;
-        document.getElementById('slComm').value = store.settings.comm;
-        runCalculations();
-    }
+    function updateSliders() { document.getElementById('slProfit').value = store.settings.profit; document.getElementById('slGross').value = store.settings.gross; document.getElementById('slComm').value = store.settings.comm; runCalculations(); }
 
-    // --- CORE CALCULATION ENGINE ---
     function runCalculations() {
-        let totalPayroll = 0;
-        let headcount = 0;
-        
-        // Reset Weekly Details Store
-        // 0: W1, 1: W2, 2: W3, 3: W4
-        weeklyDetailsStore = [
-            { id:0, name: 'W1 (1-7)', payroll:0, overhead:0, items: [] },
-            { id:1, name: 'W2 (8-15)', payroll:0, overhead:0, items: [] },
-            { id:2, name: 'W3 (16-23)', payroll:0, overhead:0, items: [] },
-            { id:3, name: 'W4 (24+)', payroll:0, overhead:0, items: [] }
-        ];
+        const checkedIDs = new Set();
+        document.querySelectorAll('.prop-check:checked').forEach(c => checkedIDs.add(c.dataset.id));
 
-        // Employees Logic
+        let totalPayroll = 0; let headcount = 0;
+        weeklyDetailsStore = [ { id:0, name: 'W1 (1-7)', payroll:0, overhead:0, items: [] }, { id:1, name: 'W2 (8-15)', payroll:0, overhead:0, items: [] }, { id:2, name: 'W3 (16-23)', payroll:0, overhead:0, items: [] }, { id:3, name: 'W4 (24+)', payroll:0, overhead:0, items: [] } ];
+
         const empHtml = store.employees.map(e => {
-            const taxRate = e.state === 'NY' ? 1.30 : 1.25; 
-            const total = (e.net || 0) * taxRate;
-            totalPayroll += total;
-            headcount++;
-            const dailyReal = (total / 20); 
-            return { ...e, totalCost: total, dailyBase: dailyReal, type:'W2' };
+            const taxRate = e.state === 'NY' ? 1.30 : 1.25; const total = (e.net || 0) * taxRate;
+            totalPayroll += total; headcount++;
+            return { ...e, totalCost: total, dailyBase: (total/20), type:'W2' };
         });
 
-        // Contractors Logic
         const contHtml = store.contractors.map(c => {
             const cost = (c.rate || 0) * (c.qty || 0);
-            if(c.active) {
-                totalPayroll += cost;
-                headcount++;
-            }
-            const dailyReal = c.type === 'hour' ? (c.rate * 8) : c.rate;
-            return { ...c, totalCost: cost, dailyBase: dailyReal, type:'1099' };
+            if(c.active) { totalPayroll += cost; headcount++; }
+            return { ...c, totalCost: cost, dailyBase: c.type === 'hour' ? (c.rate * 8) : c.rate, type:'1099' };
         });
 
-        // Fixed Costs Logic + Allocation to Week
-        let totalFixed = 0;
-        let weeklyMap = [0,0,0,0];
-        
+        let totalFixed = 0; let weeklyMap = [0,0,0,0];
         const costsHtml = store.costs.map(c => {
-            const val = c.val || 0;
-            totalFixed += val;
-            const day = c.day || 1;
-            let wIdx = 3;
-            if(day <= 7) wIdx = 0;
-            else if(day <= 15) wIdx = 1;
-            else if(day <= 23) wIdx = 2;
-            
-            weeklyMap[wIdx] += val;
-            weeklyDetailsStore[wIdx].overhead += val;
-            weeklyDetailsStore[wIdx].items.push({
-                desc: c.desc,
-                val: val,
-                cat: 'Overhead',
-                color: '#3b82f6'
-            });
-
+            const val = c.val || 0; totalFixed += val;
+            const day = c.day || 1; let wIdx = 3;
+            if(day <= 7) wIdx = 0; else if(day <= 15) wIdx = 1; else if(day <= 23) wIdx = 2;
+            weeklyMap[wIdx] += val; weeklyDetailsStore[wIdx].overhead += val;
+            weeklyDetailsStore[wIdx].items.push({ desc: c.desc, val: val, cat: 'Overhead', color: '#3b82f6' });
             return { ...c };
         });
 
-        // Payroll Allocation to Weeks (Simulating 50% on W1, 50% on W2)
         const halfPay = totalPayroll / 2;
         if(totalPayroll > 0) {
-            weeklyDetailsStore[0].payroll = halfPay;
-            weeklyDetailsStore[0].items.push({ desc: 'Payroll Run (1st Half)', val: halfPay, cat: 'Payroll', color: '#10b981' });
-            
-            weeklyDetailsStore[1].payroll = halfPay;
-            weeklyDetailsStore[1].items.push({ desc: 'Payroll Run (2nd Half)', val: halfPay, cat: 'Payroll', color: '#10b981' });
+            weeklyDetailsStore[0].payroll = halfPay; weeklyDetailsStore[0].items.push({ desc: 'Payroll (1st Half)', val: halfPay, cat: 'Payroll', color: '#10b981' });
+            weeklyDetailsStore[1].payroll = halfPay; weeklyDetailsStore[1].items.push({ desc: 'Payroll (2nd Half)', val: halfPay, cat: 'Payroll', color: '#10b981' });
         }
-
-        // Sort items by value (High to Low) for the popup
         weeklyDetailsStore.forEach(w => w.items.sort((a,b) => b.val - a.val));
 
-        // ... UI List Updates (Original Code) ...
-        // Update UI Lists
-        document.getElementById('listEmp').innerHTML = empHtml.map(e => 
-            `<div class="list-card payroll" onclick="showDetails('${e.name}', ${e.net}, ${e.totalCost-e.net}, ${e.totalCost})">
-                <div><b>${e.name}</b> <span style="font-size:0.7rem; border:1px solid #3b82f6; padding:0 2px; border-radius:3px; color:#3b82f6">W2</span><br><small>Net: ${fmt(e.net)}</small></div>
-                <div style="text-align:right"><span class="card-val">${fmt(e.totalCost)}</span><br><button class="btn-icon" onclick="event.stopPropagation(); editItem('emp','${e.id}')"><i class="fas fa-pencil-alt"></i></button><button class="btn-icon" onclick="event.stopPropagation(); deleteItem('act_employees','${e.id}')"><i class="fas fa-trash"></i></button></div>
-            </div>`
-        ).join('');
-
-        document.getElementById('listCont').innerHTML = contHtml.map(c => 
-            `<div class="list-card contractor" style="opacity:${c.active?1:0.5}">
-                <div><b>${c.name}</b> <span style="font-size:0.7rem; border:1px solid #f97316; padding:0 2px; border-radius:3px; color:#f97316">1099</span><br><small>${c.qty} @ ${fmt(c.rate)}</small></div>
-                <div style="text-align:right"><span class="card-val">${fmt(c.active ? c.totalCost : 0)}</span><br><button class="btn-icon" onclick="editItem('cont','${c.id}')"><i class="fas fa-pencil-alt"></i></button><button class="btn-icon" onclick="deleteItem('act_contractors','${c.id}')"><i class="fas fa-trash"></i></button></div>
-            </div>`
-        ).join('');
-
-        document.getElementById('listCost').innerHTML = costsHtml.map(c =>
-            `<div class="list-card expense">
-                <div><span class="day-badge">${c.day}</span> <b>${c.desc}</b></div>
-                <div><span class="card-val">${fmt(c.val)}</span> <button class="btn-icon" onclick="editItem('cost','${c.id}')"><i class="fas fa-pencil-alt"></i></button><button class="btn-icon" onclick="deleteItem('act_costs','${c.id}')"><i class="fas fa-trash"></i></button></div>
-            </div>`
-        ).join('');
-
-        // Pricing Table & KPIs (Original Code) ...
-        const totalCapacityDays = headcount * 20; 
-        const overheadPerDay = totalCapacityDays > 0 ? totalFixed / totalCapacityDays : 0;
+        document.getElementById('listEmp').innerHTML = empHtml.map(e => `<div class="list-card payroll"><div><b>${e.name}</b> <span style="font-size:0.7rem; border:1px solid #3b82f6; padding:0 2px; border-radius:3px; color:#3b82f6">W2</span><br><small>Net: ${fmt(e.net)}</small></div><div><span class="card-val">${fmt(e.totalCost)}</span><button class="btn-icon" onclick="editItem('emp','${e.id}')"><i class="fas fa-pencil-alt"></i></button><button class="btn-icon" onclick="deleteItem('act_employees','${e.id}')"><i class="fas fa-trash"></i></button></div></div>`).join('');
         
+        document.getElementById('listCont').innerHTML = contHtml.map(c => `<div class="list-card contractor" style="opacity:${c.active?1:0.5}"><div><b>${c.name}</b> <span style="font-size:0.7rem; border:1px solid #f97316; padding:0 2px; border-radius:3px; color:#f97316">1099</span><br><small>${c.qty} @ ${fmt(c.rate)}</small></div><div><span class="card-val">${fmt(c.active ? c.totalCost : 0)}</span><button class="btn-icon" onclick="editItem('cont','${c.id}')"><i class="fas fa-pencil-alt"></i></button><button class="btn-icon" onclick="deleteItem('act_contractors','${c.id}')"><i class="fas fa-trash"></i></button></div></div>`).join('');
+
+        // --- CORREÇÃO DA SINTAXE QUE CAUSAVA O BUG DO LOADING ---
+        document.getElementById('listCost').innerHTML = costsHtml.map(c => `<div class="list-card expense"><div><span class="day-badge" style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; font-size:0.8em; margin-right:5px;">${c.day}</span> <b>${c.desc}</b></div><div><span class="card-val">${fmt(c.val)}</span><button class="btn-icon" onclick="editItem('cost','${c.id}')"><i class="fas fa-pencil-alt"></i></button><button class="btn-icon" onclick="deleteItem('act_costs','${c.id}')"><i class="fas fa-trash"></i></button></div></div>`).join('');
+
+        const totalCapacityDays = headcount * 20; const overheadPerDay = totalCapacityDays > 0 ? totalFixed / totalCapacityDays : 0;
         let pricingRows = '';
         [...empHtml, ...contHtml].forEach(p => {
-            if(p.type === '1099' && !p.active) return; 
+            if(p.type === '1099' && !p.active) return;
             const realCost = p.dailyBase + overheadPerDay;
-            pricingRows += `<tr>
-                <td style="text-align:center"><input type="checkbox" class="prop-check" data-cost="${realCost}" onchange="runSim()"></td>
-                <td>${p.name}</td>
-                <td class="val-col">${fmt(realCost)}</td>
-            </tr>`;
+            const isChecked = checkedIDs.has(p.id) ? 'checked' : ''; 
+            
+            let badgeHtml = '';
+            if(p.type === 'W2') {
+                badgeHtml = '<span style="font-size:0.7rem; border:1px solid #3b82f6; padding:0 2px; border-radius:3px; color:#3b82f6; margin-left:5px">W2</span>';
+            } else {
+                badgeHtml = '<span style="font-size:0.7rem; border:1px solid #f97316; padding:0 2px; border-radius:3px; color:#f97316; margin-left:5px">1099</span>';
+            }
+
+            const breakdownHtml = `<div style="font-size:0.7rem; color:#64748b; margin-top:2px;">Base: ${fmt(p.dailyBase)} + Ovhd: ${fmt(overheadPerDay)}</div>`;
+
+            pricingRows += `<tr><td style="text-align:center"><input type="checkbox" class="prop-check" data-id="${p.id}" data-cost="${realCost}" ${isChecked} onchange="runSim()"></td><td>${p.name}${badgeHtml}${breakdownHtml}</td><td class="val-col">${fmt(realCost)}</td></tr>`;
         });
         document.getElementById('pricingBody').innerHTML = pricingRows;
 
-        const goal = Number(document.getElementById('slProfit').value);
-        const margin = Number(document.getElementById('slGross').value);
-        const comm = Number(document.getElementById('slComm').value);
-        document.getElementById('lblProfit').innerText = fmt(goal) + '/yr';
-        document.getElementById('lblGross').innerText = margin + '%';
-        document.getElementById('lblComm').innerText = comm + '%';
-        const totalOutflow = totalPayroll + totalFixed;
-        const targetMonthly = goal / 12;
-        const marginDecimal = (margin - comm) / 100;
-        let revenue = 0;
-        if(marginDecimal > 0.05) revenue = (totalOutflow + targetMonthly) / marginDecimal;
-        document.getElementById('dispPayroll').innerText = fmt(totalPayroll);
-        document.getElementById('dispFixed').innerText = fmt(totalFixed);
-        document.getElementById('kpiTotal').innerText = fmt(totalOutflow);
-        document.getElementById('kpiBreak').innerText = fmt(marginDecimal > 0 ? totalOutflow / marginDecimal : 0);
-        document.getElementById('kpiProfit').innerText = fmt(targetMonthly);
-        document.getElementById('valRevenue').innerText = fmt(revenue);
-        document.getElementById('valFixed').innerText = fmt(totalOutflow);
-        document.getElementById('valCOGS').innerText = fmt(revenue * (1 - (margin/100)));
+        const goal = Number(document.getElementById('slProfit').value); const margin = Number(document.getElementById('slGross').value); const comm = Number(document.getElementById('slComm').value);
+        document.getElementById('lblProfit').innerText = fmt(goal) + '/yr'; document.getElementById('lblGross').innerText = margin + '%'; document.getElementById('lblComm').innerText = comm + '%';
+        const totalOutflow = totalPayroll + totalFixed; const targetMonthly = goal / 12; const marginDecimal = (margin - comm) / 100;
+        let revenue = 0; if(marginDecimal > 0.05) revenue = (totalOutflow + targetMonthly) / marginDecimal;
+        
+        document.getElementById('dispPayroll').innerText = fmt(totalPayroll); document.getElementById('dispFixed').innerText = fmt(totalFixed);
+        document.getElementById('kpiTotal').innerText = fmt(totalOutflow); document.getElementById('kpiBreak').innerText = fmt(marginDecimal > 0 ? totalOutflow / marginDecimal : 0); document.getElementById('kpiProfit').innerText = fmt(targetMonthly);
+        document.getElementById('valRevenue').innerText = fmt(revenue); document.getElementById('valFixed').innerText = fmt(totalOutflow); document.getElementById('valCOGS').innerText = fmt(revenue * (1 - (margin/100)));
         document.getElementById('dispOverheadDay').innerText = fmt(overheadPerDay);
+        
         const pDays = Number(document.getElementById('propDays').value) || 1;
-        const checks = document.querySelectorAll('.prop-check:checked');
-        let dailySum = 0;
-        checks.forEach(c => dailySum += Number(c.dataset.cost));
-        const minCost = dailySum * pDays;
-        const suggest = minCost / (1 - (margin/100));
-        document.getElementById('propMin').innerText = fmt(minCost);
-        document.getElementById('propPrice').innerText = fmt(suggest);
+        let dailySum = 0; 
+        document.querySelectorAll('.prop-check:checked').forEach(c => dailySum += Number(c.dataset.cost));
+        
+        const minCost = dailySum * pDays; 
+        const suggest = minCost / (1 - (margin/100)); 
 
-        // 5. Chart UPDATE (With Click Handler)
+        document.getElementById('propMin').innerText = fmt(minCost); 
+        document.getElementById('propPrice').innerText = fmt(suggest);
+        document.getElementById('propMarkupDisplay').innerText = margin + '%';
+
         if(chartInstance) chartInstance.destroy();
         const ctx = document.getElementById('cashChart').getContext('2d');
-        chartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['W1 (1-7)', 'W2 (8-15)', 'W3 (16-23)', 'W4 (24+)'],
-                datasets: [
-                    { label: 'Payroll', data: [halfPay, halfPay, 0, 0], backgroundColor: '#10b981', stack:'0' },
-                    { label: 'Overhead', data: weeklyMap, backgroundColor: '#3b82f6', stack:'0' }
-                ]
-            },
-            options: { 
-                responsive:true, 
-                maintainAspectRatio:false, 
-                scales:{ x:{stacked:true}, y:{stacked:true, beginAtZero:true} },
-                // CLICK EVENT PARA O POPOVER
-                onClick: (e, elements) => {
-                    if (elements.length > 0) {
-                        const index = elements[0].index;
-                        renderWeekDetails(index);
-                    }
-                }
-            }
-        });
+        chartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['W1 (1-7)', 'W2 (8-15)', 'W3 (16-23)', 'W4 (24+)'], datasets: [ { label: 'Payroll', data: [halfPay, halfPay, 0, 0], backgroundColor: '#10b981', stack:'0' }, { label: 'Overhead', data: weeklyMap, backgroundColor: '#3b82f6', stack:'0' } ] }, options: { responsive:true, maintainAspectRatio:false, scales:{ x:{stacked:true}, y:{stacked:true, beginAtZero:true} }, onClick: (e, el) => { if(el.length > 0) renderWeekDetails(el[0].index); } } });
+        
+        setTimeout(syncHeights, 200);
     }
 
-    // --- POPUP RENDERER ---
     function renderWeekDetails(index) {
-        const data = weeklyDetailsStore[index];
-        const total = data.payroll + data.overhead;
-
-        // Preenche Texto
-        document.getElementById('popWeekName').innerText = data.name;
-        document.getElementById('popTotal').innerText = fmt(total);
-
-        // Preenche Barras
-        document.getElementById('popPayrollVal').innerText = fmt(data.payroll);
-        document.getElementById('popOverheadVal').innerText = fmt(data.overhead);
-        
-        const payPerc = total > 0 ? (data.payroll / total) * 100 : 0;
-        const overPerc = total > 0 ? (data.overhead / total) * 100 : 0;
-        
-        document.getElementById('popPayrollBar').style.width = payPerc + '%';
-        document.getElementById('popOverheadBar').style.width = overPerc + '%';
-
-        // Preenche Lista (Top Items)
+        const data = weeklyDetailsStore[index]; const total = data.payroll + data.overhead;
+        document.getElementById('popWeekName').innerText = data.name; document.getElementById('popTotal').innerText = fmt(total);
+        document.getElementById('popPayrollVal').innerText = fmt(data.payroll); document.getElementById('popOverheadVal').innerText = fmt(data.overhead);
+        document.getElementById('popPayrollBar').style.width = (total > 0 ? (data.payroll/total)*100 : 0) + '%'; document.getElementById('popOverheadBar').style.width = (total > 0 ? (data.overhead/total)*100 : 0) + '%';
         const listEl = document.getElementById('popList');
-        if(data.items.length === 0) {
-            listEl.innerHTML = '<li class="detail-item" style="color:#64748b; font-style:italic">No items recorded for this week.</li>';
-        } else {
-            listEl.innerHTML = data.items.map(i => `
-                <li class="detail-item">
-                    <div style="display:flex; align-items:center;">
-                        <span class="cat-badge" style="background:${i.color}20; color:${i.color}">${i.cat.substring(0,3)}</span>
-                        <span>${i.desc}</span>
-                    </div>
-                    <span style="font-family:monospace; color:#e2e8f0;">${fmt(i.val)}</span>
-                </li>
-            `).join('');
-        }
-
+        if(data.items.length === 0) listEl.innerHTML = '<li class="detail-item" style="color:#64748b; font-style:italic">No items recorded.</li>';
+        else listEl.innerHTML = data.items.map(i => `<li class="detail-item"><div style="display:flex; align-items:center;"><span class="cat-badge" style="background:${i.color}20; color:${i.color}">${i.cat.substring(0,3)}</span><span>${i.desc}</span></div><span style="font-family:monospace; color:#e2e8f0;">${fmt(i.val)}</span></li>`).join('');
         document.getElementById('smartPopover').style.display = 'flex';
     }
 
     function fmt(n) { return '$' + (n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
-    
-    // Initial Date
     document.getElementById('dateDisplay').innerText = new Date().toDateString();
 </script>
 </body>

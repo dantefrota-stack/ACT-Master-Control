@@ -3,84 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Report v44 | All Cabling Tech</title>
+    <title>Executive Report v48 | All Cabling Tech</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- TEMA DE TELA (DARK MODE) --- */
-        :root { --bg-body: #0f172a; --bg-panel: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8; --accent: #3b82f6; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --orange: #f97316; --border: #334155; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        /* --- TEMA DE TELA PADRÃO (DARK MODE) --- */
+        :root { 
+            --bg-body: #0f172a; 
+            --bg-panel: #1e293b; 
+            --text-main: #f8fafc; 
+            --text-muted: #94a3b8; 
+            --accent: #3b82f6; 
+            --success: #10b981; 
+            --warning: #f59e0b; 
+            --danger: #ef4444; 
+            --orange: #f97316; 
+            --border: #334155; 
+            --input-bg: #1e293b;
+        }
+
+        /* --- TEMA CLARO (LIGHT MODE) --- */
+        body.light-mode {
+            --bg-body: #f1f5f9; 
+            --bg-panel: #ffffff; 
+            --text-main: #0f172a; 
+            --text-muted: #64748b; 
+            --border: #cbd5e1;
+            --input-bg: #f8fafc;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         body { background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; font-size: 14px; min-height: 100vh; overflow-y: auto; }
         .admin-btn { display: none; }
         
         /* VISUALIZAÇÃO APENAS (LEONARDO) */
         body.view-only .btn-add-trigger, body.view-only .btn-icon, body.view-only .form-container { display: none !important; }
-        body.view-only input, body.view-only select { pointer-events: none; border: none; background: transparent; color: #cbd5e1; }
+        body.view-only input, body.view-only select { pointer-events: none; border: none; background: transparent; color: var(--text-muted); }
         body.view-only .sim-slider { pointer-events: auto; }
 
         .container { max-width: 1400px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .logo-img { height: 50px; display: block; margin-left: auto; }
         
-        /* GRID TELA */
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 20px; align-items: start; }
-        @media(max-width: 1200px) { .main-grid { grid-template-columns: 1fr 1fr; } .right-col { grid-column: span 2; } .panel { height: auto !important; min-height: 500px; } }
-        @media(max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .right-col { grid-column: span 1; } }
+        /* --- GRID TELA (SIMETRIA PERFEITA V48) --- */
+        .main-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1.4fr; 
+            gap: 20px; 
+            align-items: stretch; /* Garante que as colunas tenham a mesma altura */
+        }
         
-        .panel { background: var(--bg-panel); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); display: flex; flex-direction: column; border: 1px solid var(--border); position: relative; margin-bottom: 20px; }
+        /* Colunas Esquerda e Meio */
+        .left-col, .mid-col {
+            display: flex;
+            flex-direction: column;
+        }
+        /* Painel 1 e 2 esticam para ocupar toda a coluna */
+        .left-col .panel, .mid-col .panel {
+            flex: 1; 
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Coluna Direita (A mágica da simetria) */
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Espaço entre Painel 3 e 4 */
+        }
+        
+        #panel3 {
+            flex: 0 0 auto; /* Painel 3 mantém tamanho natural */
+        }
+        
+        #panel4 {
+            flex: 1; /* Painel 4 ESTICA para preencher o resto do espaço vazio */
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Responsividade */
+        @media(max-width: 1200px) { .main-grid { grid-template-columns: 1fr 1fr; } .right-col { grid-column: span 2; } .panel { height: 500px; } }
+        @media(max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .right-col { grid-column: span 1; } .panel { height: auto; } }
+        
+        /* ESTILO PAINEL */
+        .panel { background: var(--bg-panel); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border); position: relative; }
         .panel-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 10px; flex-shrink: 0; }
         
         .fill-space { flex: 1; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; min-height: 0; }
         .fill-space::-webkit-scrollbar { width: 6px; } .fill-space::-webkit-scrollbar-track { background: var(--bg-panel); } .fill-space::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
 
-        /* --- CORREÇÃO DO CARD (ALINHAMENTO) --- */
         .list-card { 
-            background: #334155; 
-            border-radius: 8px; 
-            padding: 10px; 
-            margin-bottom: 8px; 
-            border-left: 4px solid #94a3b8; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            gap: 10px; 
+            background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; 
+            padding: 10px; margin-bottom: 8px; border-left: 4px solid var(--text-muted); 
+            display: flex; justify-content: space-between; align-items: center; gap: 10px; 
         }
-        .list-card.expense { border-left-color: var(--warning); } 
-        .list-card.payroll { border-left-color: var(--accent); } 
-        .list-card.contractor { border-left-color: var(--orange); }
-        
-        /* Lado esquerdo (Texto) pode quebrar linha */
-        .list-card > div:first-child { 
-            flex: 1; 
-            min-width: 0; 
-            line-height: 1.3;
-            margin-right: 5px;
-        }
-        
-        /* Lado direito (Preço + icones) TRAVADO em uma linha */
-        .list-card > div:last-child { 
-            flex-shrink: 0; /* Proíbe encolher */
-            white-space: nowrap; /* Proíbe quebra de linha de texto */
-            display: flex; 
-            align-items: center;
-            flex-wrap: nowrap; /* Proíbe icones de caírem */
-            gap: 5px; /* Espaço entre preço e botões */
-        }
-
+        .list-card.expense { border-left-color: var(--warning); } .list-card.payroll { border-left-color: var(--accent); } .list-card.contractor { border-left-color: var(--orange); }
+        .list-card > div:first-child { flex: 1; min-width: 0; line-height: 1.3; margin-right: 5px; }
+        .list-card > div:last-child { flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; flex-wrap: nowrap; gap: 5px; }
         .card-val { font-family: monospace; font-weight: bold; color: var(--success); font-size: 0.95rem; }
         
-        .form-container { background: #334155; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; flex-shrink: 0; }
+        .form-container { background: var(--input-bg); border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; flex-shrink: 0; }
         .form-container.active { display: block; }
-        .btn-add-trigger { width: 100%; padding: 10px; background: #334155; border: 2px dashed #475569; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 10px; text-align: center; flex-shrink: 0; font-size: 0.8rem; }
-        .form-control { width: 100%; background: var(--bg-panel); border: 1px solid #475569; color: white; padding: 8px; border-radius: 6px; margin-bottom: 5px; }
+        .btn-add-trigger { width: 100%; padding: 10px; background: var(--bg-panel); border: 2px dashed var(--text-muted); color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 10px; text-align: center; flex-shrink: 0; font-size: 0.8rem; }
+        .form-control { width: 100%; background: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); padding: 8px; border-radius: 6px; margin-bottom: 5px; }
         .btn { padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; border: none; color: white; margin-top: 5px; }
         .btn-primary { background: var(--accent); } .btn-success { background: var(--success); } .btn-warning { background: var(--warning); color: #0f172a; } .btn-orange { background: var(--orange); } 
         
         .panel-footer { margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border); text-align: right; font-weight: bold; flex-shrink: 0; background: var(--bg-panel); }
 
         .kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .kpi-card { background: #334155; padding: 10px; border-radius: 8px; text-align: center; border-bottom: 3px solid transparent; }
+        .kpi-card { background: var(--input-bg); border: 1px solid var(--border); padding: 10px; border-radius: 8px; text-align: center; border-bottom: 3px solid transparent; }
         .kpi-val { font-size: 1.1rem; font-weight: 800; font-family: monospace; }
         .simulator-box { background: var(--bg-panel); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .sim-slider { width: 100%; margin: 10px 0; }
@@ -91,13 +127,11 @@
         .cost-table th { padding: 5px; border-bottom: 1px solid var(--border); text-align: left; }
         .val-col { text-align: right; font-family: monospace; }
         .row-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-icon { background: transparent; color: #94a3b8; border: none; cursor: pointer; font-size: 1rem; margin-left: 5px; transition: color 0.2s; }
-        .btn-icon:hover { color: #fff; }
+        .btn-icon { background: transparent; color: var(--text-muted); border: none; cursor: pointer; font-size: 1rem; margin-left: 5px; transition: color 0.2s; } .btn-icon:hover { color: var(--text-main); }
         
         .chart-container-screen { height:140px; width:100%; display:flex; justify-content:center; margin-bottom:15px; border-bottom:1px dashed var(--border); padding-bottom:10px; }
         .bar-chart-screen { height:150px; margin-top:20px; position: relative; }
 
-        /* Elementos de impressão (hidden na tela) */
         .print-only-block { display: none; }
         .print-weekly-table { display: none; }
 
@@ -105,110 +139,66 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
         .modal-content { background: var(--bg-panel); width: 90%; max-width: 400px; padding: 0; border-radius: 12px; border: 1px solid var(--accent); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); overflow: hidden; animation: popUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
         @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .pop-header { background: #334155; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #475569; }
-        .pop-title h3 { margin: 0; color: white; font-size: 1.1rem; }
+        .pop-header { background: var(--input-bg); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .pop-title h3 { margin: 0; color: var(--text-main); font-size: 1.1rem; }
         .pop-body { padding: 20px; }
-        .login-input { background: #0f172a; border: 1px solid #475569; padding: 15px; color: white; width: 100%; border-radius: 8px; margin-bottom: 15px; font-size: 1.1rem; text-align: center; }
+        .login-input { background: var(--bg-body); border: 1px solid var(--border); padding: 15px; color: var(--text-main); width: 100%; border-radius: 8px; margin-bottom: 15px; font-size: 1.1rem; text-align: center; }
         .login-btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; font-weight: bold; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-        .log-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; margin-top: 10px; } .log-table td { border-bottom: 1px solid #334; padding: 5px; color: #94a3b8; }
+        .log-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; margin-top: 10px; } .log-table td { border-bottom: 1px solid var(--border); padding: 5px; color: var(--text-muted); }
 
         /* ==========================================================================
-           IMPRESSÃO (V44 - REFINED & ALIGNED)
+           IMPRESSÃO (PADRÃO MANTIDO)
            ========================================================================== */
         @media print {
             @page { size: Letter portrait; margin: 1.5cm; }
-            
-            :root { --bg-body: #fff !important; --bg-panel: #fff !important; }
-            * { 
-                background: transparent !important; color: #000 !important; 
-                text-shadow: none !important; box-shadow: none !important; border-color: #000 !important;
-            }
-
-            body, html { width: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif !important; font-size: 11pt !important; line-height: 1.3; }
+            :root { --bg-body: #fff !important; --bg-panel: #fff !important; --text-main: #000 !important; --border: #000 !important; }
+            * { background: transparent !important; color: #000 !important; text-shadow: none !important; box-shadow: none !important; border-color: #000 !important; }
+            body, html { width: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif !important; font-size: 11pt !important; line-height: 1.3; overflow: visible !important; height: auto !important; }
             .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
-            
-            /* HIDE NOISE */
-            .no-print, .btn-add-trigger, .btn, .btn-icon, .modal-overlay, .admin-btn, 
-            .simulator-box .no-print, #propSection, 
-            .chart-container-screen, .bar-chart-screen 
-            { display: none !important; }
-
+            .no-print, .btn-add-trigger, .btn, .btn-icon, .modal-overlay, .admin-btn, .simulator-box .no-print, #propSection, .chart-container-screen, .bar-chart-screen { display: none !important; }
             .header { border-bottom: 3px solid #000 !important; margin-bottom: 20px; }
-            .header h1 { font-size: 22pt !important; text-transform: uppercase; }
-            
-            /* RESET LAYOUT */
+            .header h1 { font-size: 22pt !important; text-transform: uppercase; color: #000 !important; }
             .main-grid { display: block !important; }
-            .left-col, .mid-col, .right-col { display: block !important; width: 100% !important; margin: 0 !important; }
-
-            /* --- PAGINAÇÃO --- */
-            #panel1 { page-break-after: always !important; } /* P1: Time */
-            #panel2 { page-break-after: always !important; } /* P2: Custos */
-            #panel3 { page-break-after: always !important; } /* P3: Finanças */
-            #panel4 { page-break-after: auto !important; }   /* P4: Diário */
-
-            /* PAINEIS */
-            .panel { border: none !important; margin: 0 !important; padding: 0 !important; display: block !important; }
-            .panel-title { 
-                font-size: 16pt !important; color: #000 !important; 
-                border-bottom: 2px solid #000 !important; margin: 10px 0 20px 0; padding: 0; 
-                text-transform: uppercase; 
-            }
-
-            /* LISTAS E TABELAS NA IMPRESSAO */
+            .left-col, .mid-col, .right-col { display: block !important; width: 100% !important; margin: 0 !important; height: auto !important; }
+            #panel1 { page-break-after: always !important; height: auto !important; }
+            #panel2 { page-break-after: always !important; height: auto !important; }
+            #panel3 { page-break-after: always !important; height: auto !important; }
+            #panel4 { page-break-after: auto !important; height: auto !important; }
+            .panel { border: none !important; margin: 0 !important; padding: 0 !important; display: block !important; height: auto !important; }
+            .panel-title { font-size: 16pt !important; color: #000 !important; border-bottom: 2px solid #000 !important; margin: 10px 0 20px 0; padding: 0; text-transform: uppercase; }
             .fill-space, .scroll-list { height: auto !important; overflow: visible !important; display: block; }
-            
-            .list-card {
-                border: none !important; 
-                border-bottom: 1px solid #ddd !important;
-                border-left: none !important;
-                padding: 3pt 0 !important; margin: 0 !important;
-                font-size: 11pt !important;
-                display: flex; justify-content: space-between;
-                align-items: center;
-                background-color: transparent !important;
-                gap: 5px !important;
-            }
+            .list-card { border: none !important; border-bottom: 1px solid #ddd !important; border-left: none !important; padding: 3pt 0 !important; margin: 0 !important; font-size: 11pt !important; display: flex; justify-content: space-between; align-items: center; background-color: transparent !important; gap: 5px !important; }
             .list-card b { font-weight: normal !important; }
-            
-            /* FORÇA O PREÇO NA IMPRESSÃO A FICAR NA DIREITA */
-            .list-card > div:last-child {
-                display: block !important; /* Em impressão não precisamos de flex para icones, só texto */
-            }
-            
+            .list-card > div:last-child { display: block !important; }
             .card-val { font-size: 11pt !important; font-weight: bold; color: #000 !important; }
             .text-muted { font-style: italic; font-size: 9pt; color: #444 !important; }
             .section-header { margin-top: 20px; font-weight: bold; text-decoration: underline; }
-
-            /* TABELAS */
             .cost-table, .print-weekly-table, .projection-table { width: 100%; font-size: 11pt; border-collapse: collapse; margin-top: 15px; }
-            .cost-table th, .print-weekly-table th, .projection-table th { border-bottom: 2px solid #000 !important; text-align: left; font-weight: bold; padding: 5px 0; }
-            .cost-table td, .print-weekly-table td, .projection-table td { border-bottom: 1px solid #ccc !important; padding: 5px 0; }
-
-            /* KPIs & PARAMETERS */
+            .cost-table th, .print-weekly-table th, .projection-table th { border-bottom: 2px solid #000 !important; text-align: left; font-weight: bold; padding: 5px 0; color: #000 !important; }
+            .cost-table td, .print-weekly-table td, .projection-table td { border-bottom: 1px solid #ccc !important; padding: 5px 0; color: #000 !important; }
             .print-only-block { display: block !important; background: #f9f9f9 !important; border: 1px solid #ccc !important; padding: 10px; margin-bottom: 20px; font-size: 10pt; }
             .kpi-row { display: flex !important; gap: 15px; margin-bottom: 20px; }
             .kpi-card { border: 1px solid #000 !important; padding: 10px !important; flex: 1; text-align: center; }
-            .kpi-val { font-size: 16pt !important; font-weight: bold; }
-
+            .kpi-val { font-size: 16pt !important; font-weight: bold; color: #000 !important; }
             .print-weekly-table { display: table !important; margin-bottom: 20px; }
-            
-            .panel-footer { border-top: 2px solid #000 !important; font-size: 14pt !important; font-weight: bold; margin-top: 20px; padding-top: 5px; text-align: right; }
+            .panel-footer { border-top: 2px solid #000 !important; font-size: 14pt !important; font-weight: bold; margin-top: 20px; padding-top: 5px; text-align: right; background: none !important; color: #000 !important; }
         }
     </style>
 </head>
 <body>
 
 <div class="modal-overlay" id="loginModal">
-    <div class="modal-content"><div class="pop-header" style="justify-content:center;"><h3>ACT SYSTEM ACCESS</h3></div><div class="pop-body" style="text-align:center;"><p style="color:#94a3b8; margin-bottom:20px;">Please identify yourself</p><select id="loginUser" class="login-input"><option value="dante">Dante Frota (CEO)</option><option value="leonardo">Leonardo (COO)</option></select><input type="password" id="loginPass" class="login-input" placeholder="Password"><button class="login-btn" onclick="attemptLogin()">ENTER SYSTEM</button><p id="loginError" style="color:var(--danger); margin-top:10px; display:none;">Invalid Password</p></div></div>
+    <div class="modal-content"><div class="pop-header" style="justify-content:center;"><h3>ACT SYSTEM ACCESS</h3></div><div class="pop-body" style="text-align:center;"><p style="color:var(--text-muted); margin-bottom:20px;">Please identify yourself</p><select id="loginUser" class="login-input"><option value="dante">Dante Frota (CEO)</option><option value="leonardo">Leonardo (COO)</option></select><input type="password" id="loginPass" class="login-input" placeholder="Password"><button class="login-btn" onclick="attemptLogin()">ENTER SYSTEM</button><p id="loginError" style="color:var(--danger); margin-top:10px; display:none;">Invalid Password</p></div></div>
 </div>
-<div class="modal-overlay" id="adminModal" style="display:none;"><div class="modal-content" style="max-width:600px;"><div class="pop-header"><h3>ADMIN PANEL</h3><span style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('adminModal').style.display='none'">×</span></div><div class="pop-body"><h4 style="color:var(--accent); margin-top:0;">Access Logs</h4><div style="max-height:200px; overflow-y:auto; background:#0f172a; padding:10px; border-radius:8px;"><table class="log-table" id="logTable"></table></div><h4 style="color:var(--warning); margin-top:20px;">Security Settings</h4><div class="row-inputs"><input type="text" id="newPassLeo" class="form-control" placeholder="New Pass (Leonardo)"><input type="text" id="newPassDante" class="form-control" placeholder="New Pass (Dante)"></div><button class="btn btn-primary" onclick="updatePasswords()">Update Credentials</button></div></div></div>
+<div class="modal-overlay" id="adminModal" style="display:none;"><div class="modal-content" style="max-width:600px;"><div class="pop-header"><h3>ADMIN PANEL</h3><span style="cursor:pointer; font-size:1.5rem; color:var(--text-muted);" onclick="document.getElementById('adminModal').style.display='none'">×</span></div><div class="pop-body"><h4 style="color:var(--accent); margin-top:0;">Access Logs</h4><div style="max-height:200px; overflow-y:auto; background:var(--bg-body); padding:10px; border-radius:8px;"><table class="log-table" id="logTable"></table></div><h4 style="color:var(--warning); margin-top:20px;">Security Settings</h4><div class="row-inputs"><input type="text" id="newPassLeo" class="form-control" placeholder="New Pass (Leonardo)"><input type="text" id="newPassDante" class="form-control" placeholder="New Pass (Dante)"></div><button class="btn btn-primary" onclick="updatePasswords()">Update Credentials</button></div></div></div>
 
 <div class="container">
     <header class="header">
-        <div><h1 style="font-size:1.2rem; color:#94a3b8; margin:0;">EXECUTIVE REPORT v44</h1><div id="dateDisplay" style="color:var(--accent); font-weight:bold; font-size:1.1rem;"></div></div>
+        <div><h1 style="font-size:1.2rem; color:var(--text-muted); margin:0;">EXECUTIVE REPORT v48</h1><div id="dateDisplay" style="color:var(--accent); font-weight:bold; font-size:1.1rem;"></div></div>
         <div style="display:flex; gap:10px; align-items:center;">
+            <button class="btn no-print" onclick="toggleTheme()" style="background:var(--bg-panel); color:var(--text-muted); border:1px solid var(--border); width:auto; padding:8px 15px; cursor:pointer;"><i class="fas fa-sun"></i> Theme</button>
             <button class="btn no-print admin-btn" onclick="document.getElementById('adminModal').style.display='flex'" style="background:#475569; width:auto; padding:8px 15px;"><i class="fas fa-user-shield"></i> Admin</button>
-            <button class="btn no-print" onclick="window.print()" style="background:#334155; width:auto; padding:8px 15px;"><i class="fas fa-print"></i> PDF/Print</button>
+            <button class="btn no-print" onclick="window.print()" style="background:var(--bg-panel); color:var(--text-muted); border:1px solid var(--border); width:auto; padding:8px 15px;"><i class="fas fa-print"></i> PDF/Print</button>
             <img src="https://lh3.googleusercontent.com/d/1Zlo-Cf7zY-jANUusmo5iwCR8ADbPu6wx" alt="ACT" class="logo-img" onerror="this.style.display='none'">
         </div>
     </header>
@@ -268,7 +258,7 @@
                     <table class="projection-table"><tr><td>Required Revenue</td><td class="val" id="valRevenue" style="color:var(--accent); font-size:1.1rem">$0</td></tr><tr><td><small>Fixed Costs</small></td><td class="val" id="valFixed">$0</td></tr><tr><td><small>COGS (Materials)</small></td><td class="val" id="valCOGS" style="color:var(--cogs)">$0</td></tr></table>
                 </div>
                 
-                <div class="bar-chart-screen"><canvas id="cashChart" style="cursor: pointer;"></canvas><div class="no-print" style="font-size: 0.7rem; text-align: center; color: #64748b; margin-top: 5px;">* Click columns for breakdown</div></div>
+                <div class="bar-chart-screen"><canvas id="cashChart" style="cursor: pointer;"></canvas><div class="no-print" style="font-size: 0.7rem; text-align: center; color: var(--text-muted); margin-top: 5px;">* Click columns for breakdown</div></div>
                 <div id="weeklyTextSummary"></div>
             </div>
 
@@ -279,16 +269,16 @@
                 </div>
                 <table class="cost-table"><thead><tr><th class="no-print">Check</th><th>Name</th><th class="val-col">Real Cost/Day</th></tr></thead><tbody id="pricingBody"></tbody></table>
                 <div class="simulator-box" id="propSection" style="margin-top:10px; border:1px dashed #475569;">
-                    <div style="font-size:0.7rem; color:#94a3b8; text-transform:uppercase;">Quick Proposal</div><input type="number" id="propDays" class="form-control" placeholder="Days" style="padding:5px; margin-bottom:5px;" oninput="runSim()">
+                    <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase;">Quick Proposal</div><input type="number" id="propDays" class="form-control" placeholder="Days" style="padding:5px; margin-bottom:5px;" oninput="runSim()">
                     <div style="display:flex; justify-content:space-between;"><span>Min Cost:</span><span id="propMin" style="color:var(--danger); font-weight:bold">$0</span></div>
-                    <div style="display:flex; justify-content:space-between; margin-top:5px; align-items:center;"><span style="line-height:1.1">Target Price<br><small style="color:#64748b; font-size:0.75rem;">(w/ <span id="propMarkupDisplay">0%</span> Mkp)</small></span><span id="propPrice" style="color:var(--success); font-weight:bold; font-size:1.2rem">$0</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-top:5px; align-items:center;"><span style="line-height:1.1">Target Price<br><small style="color:var(--text-muted); font-size:0.75rem;">(w/ <span id="propMarkupDisplay">0%</span> Mkp)</small></span><span id="propPrice" style="color:var(--success); font-weight:bold; font-size:1.2rem">$0</span></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal-overlay" id="smartPopover" style="display:none;"><div class="modal-content"><div class="pop-header"><div class="pop-title"><span id="popWeekName">WEEK X</span><h3 id="popDateRange">Provisioning Details</h3></div><span style="cursor:pointer; font-size:1.5rem; color:#94a3b8;" onclick="document.getElementById('smartPopover').style.display='none'">×</span></div><div class="pop-body"><div class="big-number-box"><span style="color:#94a3b8; font-size:0.9rem;">Total to Provision</span><span id="popTotal" style="font-size:1.4rem; font-weight:bold; color:var(--success)">$0.00</span></div><div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#cbd5e1;"><span>Payroll</span><span id="popPayrollVal">$0</span></div><div class="progress-bar-bg"><div id="popPayrollBar" class="progress-fill" style="background-color: var(--success); width: 0%;"></div></div><div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#cbd5e1;"><span>Overhead</span><span id="popOverheadVal">$0</span></div><div class="progress-bar-bg"><div id="popOverheadBar" class="progress-fill" style="background-color: var(--accent); width: 0%;"></div></div><div style="border-top: 1px solid #334155; margin: 15px 0;"></div><ul id="popList" class="detail-list"></ul></div></div></div>
+<div class="modal-overlay" id="smartPopover" style="display:none;"><div class="modal-content"><div class="pop-header"><div class="pop-title"><span id="popWeekName">WEEK X</span><h3 id="popDateRange">Provisioning Details</h3></div><span style="cursor:pointer; font-size:1.5rem; color:var(--text-muted);" onclick="document.getElementById('smartPopover').style.display='none'">×</span></div><div class="pop-body"><div class="big-number-box"><span style="color:var(--text-muted); font-size:0.9rem;">Total to Provision</span><span id="popTotal" style="font-size:1.4rem; font-weight:bold; color:var(--success)">$0.00</span></div><div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted);"><span>Payroll</span><span id="popPayrollVal">$0</span></div><div class="progress-bar-bg"><div id="popPayrollBar" class="progress-fill" style="background-color: var(--success); width: 0%;"></div></div><div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted);"><span>Overhead</span><span id="popOverheadVal">$0</span></div><div class="progress-bar-bg"><div id="popOverheadBar" class="progress-fill" style="background-color: var(--accent); width: 0%;"></div></div><div style="border-top: 1px solid var(--border); margin: 15px 0;"></div><ul id="popList" class="detail-list"></ul></div></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -303,12 +293,38 @@
     let authData = JSON.parse(localStorage.getItem('act_auth')) || { dante: '1996', leonardo: '1983' };
     let accessLogs = JSON.parse(localStorage.getItem('act_logs')) || [];
 
+    // --- THEME TOGGLE LOGIC ---
+    window.toggleTheme = () => {
+        document.body.classList.toggle('light-mode');
+        localStorage.setItem('act_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        updateChartsTheme();
+    };
+
+    if(localStorage.getItem('act_theme') === 'light') { document.body.classList.add('light-mode'); }
+
+    function updateChartsTheme() {
+        const isLight = document.body.classList.contains('light-mode');
+        const color = isLight ? '#334155' : '#94a3b8';
+        const legendColor = isLight ? '#0f172a' : '#fff';
+
+        if(chartInstance) { 
+            chartInstance.options.scales.x.ticks.color = color;
+            chartInstance.options.scales.y.ticks.color = color;
+            chartInstance.options.plugins.legend.labels.color = legendColor;
+            chartInstance.update(); 
+        }
+    }
+
     const mediaQueryList = window.matchMedia('print');
     mediaQueryList.addEventListener('change', mql => {
         if (mql.matches) {
             document.getElementById('pGoal').innerText = fmt(document.getElementById('slProfit').value);
             document.getElementById('pMark').innerText = document.getElementById('slGross').value + '%';
             document.getElementById('pComm').innerText = document.getElementById('slComm').value + '%';
+            if(chartInstance) { chartInstance.options.scales.x.ticks.color='#000'; chartInstance.options.scales.y.ticks.color='#000'; chartInstance.options.plugins.legend.labels.color='#000'; chartInstance.resize(); chartInstance.update(); }
+        } else {
+            updateChartsTheme();
+            if(chartInstance) { chartInstance.resize(); chartInstance.update(); }
         }
     });
 
@@ -320,13 +336,12 @@
             if(u === 'leonardo') document.body.classList.add('view-only');
             if(u === 'dante') { document.querySelector('.admin-btn').style.display = 'inline-flex'; }
             accessLogs.unshift({ user: u, time: new Date().toLocaleString() }); if(accessLogs.length > 50) accessLogs.pop(); localStorage.setItem('act_logs', JSON.stringify(accessLogs)); renderLogs();
+            setTimeout(updateChartsTheme, 500);
         } else { document.getElementById('loginError').style.display = 'block'; }
     };
     function renderLogs() { document.getElementById('logTable').innerHTML = accessLogs.map(l => `<tr><td>${l.time}</td><td style="color:${l.user==='dante'?'#3b82f6':'#f59e0b'}">${l.user.toUpperCase()}</td></tr>`).join(''); }
     window.updatePasswords = () => { const npL = document.getElementById('newPassLeo').value; const npD = document.getElementById('newPassDante').value; if(npL) authData.leonardo = npL; if(npD) authData.dante = npD; localStorage.setItem('act_auth', JSON.stringify(authData)); alert('Updated!'); document.getElementById('adminModal').style.display = 'none'; };
 
-    const syncHeights = () => { if(window.innerWidth <= 1200) return; const h = document.getElementById('panel3').offsetHeight; if(h > 400) { document.getElementById('panel1').style.height = h+'px'; document.getElementById('panel2').style.height = h+'px'; }};
-    window.addEventListener('resize', syncHeights); setInterval(syncHeights, 1000);
     window.toggle = (id) => { const el = document.getElementById(id); el.style.display = el.style.display==='block'?'none':'block'; };
 
     const checkAuth = () => { if(currentUser === 'leonardo') { alert('View Only Mode'); return false; } return true; }; 
@@ -337,7 +352,7 @@
     window.editItem = (type,id) => { if(!checkAuth()) return; if(type==='emp'){ const i=store.employees.find(x=>x.id===id); document.getElementById('emp_id').value=i.id; document.getElementById('emp_name').value=i.name; document.getElementById('emp_net').value=i.net; document.getElementById('empForm').style.display='block'; } else if(type==='cont'){ const i=store.contractors.find(x=>x.id===id); document.getElementById('cont_id').value=i.id; document.getElementById('cont_name').value=i.name; document.getElementById('cont_rate').value=i.rate; document.getElementById('cont_qty').value=i.qty; document.getElementById('cont_active').checked=i.active; document.getElementById('contForm').style.display='block'; } else { const i=store.costs.find(x=>x.id===id); document.getElementById('cost_id').value=i.id; document.getElementById('cost_desc').value=i.desc; document.getElementById('cost_val').value=i.val; document.getElementById('cost_day').value=i.day; document.getElementById('costForm').style.display='block'; } };
     window.deleteItem = async (coll,id) => { if(!checkAuth()) return; if(confirm('Delete?')) await deleteDoc(doc(db,coll,id)); };
     
-    window.runSim = () => { runCalculations(); setTimeout(syncHeights,100); };
+    window.runSim = () => { runCalculations(); };
     function resetForms() { document.querySelectorAll('input').forEach(i => { if(i.type!=='checkbox' && i.type!=='range') i.value=''; }); document.querySelectorAll('.form-container').forEach(d => d.style.display='none'); }
 
     if(db) { onSnapshot(doc(db,'act_settings','global'),s=>{if(s.exists()){store.settings=s.data();updateSliders();}}); onSnapshot(collection(db,'act_employees'),s=>{store.employees=s.docs.map(d=>({id:d.id,...d.data()}));runSim();}); onSnapshot(collection(db,'act_contractors'),s=>{store.contractors=s.docs.map(d=>({id:d.id,...d.data()}));runSim();}); onSnapshot(collection(db,'act_costs'),s=>{store.costs=s.docs.map(d=>({id:d.id,...d.data()}));runSim();}); }
@@ -351,6 +366,7 @@
         const contHtml = store.contractors.map(c => { const cost=(c.rate||0)*(c.qty||0); if(c.active){totalPayroll+=cost;headcount++;} return {...c,totalCost:cost,dailyBase:c.type==='hour'?(c.rate*8):c.rate,type:'1099'}; });
         
         let totalFixed=0, weeklyMap=[0,0,0,0], pieL=[], pieV=[];
+        store.costs.sort((a,b) => (a.day||0) - (b.day||0));
         const costsHtml = store.costs.map(c => { 
             const val=c.val||0; totalFixed+=val; const d=c.day||1; let w=3; if(d<=7)w=0;else if(d<=15)w=1;else if(d<=23)w=2;
             weeklyMap[w]+=val; weeklyDetailsStore[w].overhead+=val; weeklyDetailsStore[w].items.push({desc:c.desc,val:val,cat:'Overhead',color:'#3b82f6'});
@@ -369,7 +385,7 @@
         let pRows=''; [...empHtml,...contHtml].forEach(p=>{
             if(p.type==='1099'&&!p.active)return; const rCost=p.dailyBase+ovhdPerDay; const chk=checkedIDs.has(p.id)?'checked':'';
             const bdg=p.type==='W2'?'<span style="font-size:0.7rem;border:1px solid #3b82f6;padding:0 2px;border-radius:3px;color:#3b82f6;margin-left:5px">W2</span>':'<span style="font-size:0.7rem;border:1px solid #f97316;padding:0 2px;border-radius:3px;color:#f97316;margin-left:5px">1099</span>';
-            pRows+=`<tr><td style="text-align:center" class="no-print"><input type="checkbox" class="prop-check" data-id="${p.id}" data-cost="${rCost}" ${chk} onchange="runSim()"></td><td>${p.name}${bdg}<div style="font-size:0.7rem;color:#64748b;margin-top:2px;">Base: ${fmt(p.dailyBase)} + Ovhd: ${fmt(ovhdPerDay)}</div></td><td class="val-col">${fmt(rCost)}</td></tr>`;
+            pRows+=`<tr><td style="text-align:center" class="no-print"><input type="checkbox" class="prop-check" data-id="${p.id}" data-cost="${rCost}" ${chk} onchange="runSim()"></td><td>${p.name}${bdg}<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">Base: ${fmt(p.dailyBase)} + Ovhd: ${fmt(ovhdPerDay)}</div></td><td class="val-col">${fmt(rCost)}</td></tr>`;
         });
         document.getElementById('pricingBody').innerHTML=pRows;
 
@@ -386,18 +402,13 @@
         const minC=dSum*pDays; const sugg=minC/(1-(marg/100));
         document.getElementById('propMin').innerText=fmt(minC); document.getElementById('propPrice').innerText=fmt(sugg); document.getElementById('propMarkupDisplay').innerText=marg+'%';
 
-        // --- NEW: Generate Weekly Table for Print (Replaces Chart) ---
-        const wTableHTML = `<table class="print-weekly-table">
-            <thead><tr><th>Period</th><th style="text-align:right">Payroll</th><th style="text-align:right">Overhead</th><th style="text-align:right">Total</th></tr></thead>
-            <tbody>${weeklyDetailsStore.map(d => `<tr><td>${d.name}</td><td style="text-align:right">${fmt(d.payroll)}</td><td style="text-align:right">${fmt(d.overhead)}</td><td style="text-align:right; font-weight:bold">${fmt(d.payroll+d.overhead)}</td></tr>`).join('')}</tbody>
-        </table>`;
+        const wTableHTML = `<table class="print-weekly-table"><thead><tr><th>Period</th><th style="text-align:right">Payroll</th><th style="text-align:right">Overhead</th><th style="text-align:right">Total</th></tr></thead><tbody>${weeklyDetailsStore.map(d => `<tr><td>${d.name}</td><td style="text-align:right">${fmt(d.payroll)}</td><td style="text-align:right">${fmt(d.overhead)}</td><td style="text-align:right; font-weight:bold">${fmt(d.payroll+d.overhead)}</td></tr>`).join('')}</tbody></table>`;
         document.getElementById('weeklyTextSummary').innerHTML = wTableHTML;
 
-        // Chart Update (Screen Only)
         const chartLabels = weeklyDetailsStore.map(d => [d.name, fmt(d.payroll + d.overhead)]); 
         if(chartInstance)chartInstance.destroy(); const ctx=document.getElementById('cashChart').getContext('2d');
-        chartInstance=new Chart(ctx,{type:'bar',data:{labels:chartLabels,datasets:[{label:'Payroll',data:[halfPay,halfPay,0,0],backgroundColor:'#10b981',stack:'0'},{label:'Overhead',data:weeklyMap,backgroundColor:'#3b82f6',stack:'0'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{color:'#94a3b8'}},y:{stacked:true,beginAtZero:true,ticks:{color:'#94a3b8'}}},plugins:{legend:{labels:{color:'#fff'}}},onClick:(e,el)=>{if(el.length>0)renderWeekDetails(el[0].index);}}});
-        setTimeout(syncHeights,200);
+        chartInstance=new Chart(ctx,{type:'bar',data:{labels:chartLabels,datasets:[{label:'Payroll',data:[halfPay,halfPay,0,0],backgroundColor:'#10b981',stack:'0'},{label:'Overhead',data:weeklyMap,backgroundColor:'#3b82f6',stack:'0'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,y:{stacked:true,beginAtZero:true}}},plugins:{legend:{}}},onClick:(e,el)=>{if(el.length>0)renderWeekDetails(el[0].index);}});
+        setTimeout(updateChartsTheme, 100);
     }
 
     function updatePieChart(l,v) {
@@ -411,8 +422,8 @@
         document.getElementById('popPayrollVal').innerText=fmt(d.payroll); document.getElementById('popOverheadVal').innerText=fmt(d.overhead);
         document.getElementById('popPayrollBar').style.width=(t>0?(d.payroll/t)*100:0)+'%'; document.getElementById('popOverheadBar').style.width=(t>0?(d.overhead/t)*100:0)+'%';
         const l=document.getElementById('popList');
-        if(d.items.length===0)l.innerHTML='<li class="detail-item" style="color:#64748b;font-style:italic">No items.</li>';
-        else l.innerHTML=d.items.map(i=>`<li class="detail-item"><div style="display:flex;align-items:center;"><span class="cat-badge" style="background:${i.color}20;color:${i.color}">${i.cat.substring(0,3)}</span><span>${i.desc}</span></div><span style="font-family:monospace;color:#e2e8f0;">${fmt(i.val)}</span></li>`).join('');
+        if(d.items.length===0)l.innerHTML='<li class="detail-item" style="color:var(--text-muted);font-style:italic">No items.</li>';
+        else l.innerHTML=d.items.map(i=>`<li class="detail-item"><div style="display:flex;align-items:center;"><span class="cat-badge" style="background:${i.color}20;color:${i.color}">${i.cat.substring(0,3)}</span><span>${i.desc}</span></div><span style="font-family:monospace;color:var(--text-main);">${fmt(i.val)}</span></li>`).join('');
         document.getElementById('smartPopover').style.display='flex';
     }
     function fmt(n){return '$'+(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});} document.getElementById('dateDisplay').innerText=new Date().toDateString();
